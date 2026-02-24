@@ -1,21 +1,41 @@
 // Convert Wirenboard metas to Home Assistant MQTT Discovery configs
 
 var cfg = readConfig("/etc/wb-rules/wb2ha.config.json");
-var entities = readConfig("/etc/wb-rules/wb2ha.list.json");
+var list = readConfig("/etc/wb-rules/wb2ha.list.json");
 
 var devices = {};
+
+// rework includeds
+var allControls = {};
+if (list.only) {
+    for (var i in list.only) {
+        var splitted = list.only[i].split("/");
+        if (splitted.length === 1) { // all controls
+            allControls[splitted[0]] = true;
+            // also add to mods without controls
+            if (!list.modify[splitted[0]]) {
+                list.modify[splitted[0]] = {};
+            }
+        } else { // only select controls. just add to mods.
+            if (splitted.length !== 2) {
+                log("wb2ha: wrong include: {}", list.only[i]);
+            } else {
+                if (!list.modify[splitted[0]]) {
+                    list.modify[splitted[0]] = {};
+                }
+                if (!list.modify[splitted[0]][splitted[1]]) {
+                    list.modify[splitted[0]][splitted[1]] = {};
+                }
+            }
+        }
+    }
+}
 
 trackMqtt("/devices/+/meta", function (message) {
     var stripped = message.topic.slice("/devices/".length);
     var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
 
     if (message.value.length === 0) {
-//        if (devices[deviceId]) {
-//            for (var controlId in devices[deviceId].controls) {
-//                devices[deviceId].controls[controlId].remove = true;
-//                devices[deviceId].controls[controlId].published = false;
-//            }
-//        }
         return;
     }
 
@@ -85,22 +105,42 @@ function process(deviceId, controlId) {
     if (control.processed) {
         return;
     }
+    control.processed = true;
 
-    var mods = entities[deviceId];
-    if (!mods) {
-        //debug("wb2ha: skipping device {}", deviceId);
+    if (list.exclude[deviceId]) {
         control.skipped = true;
+        debug("wb2ha: excluding device {} as per config", deviceId);
         return;
+    }
+    if (list.exclude[deviceId + "/" + controlId]) {
+        control.skipped = true;
+        debug("wb2ha: skipping control {} as per config", controlId);
+        return;
+    }
+
+    var mods = list.modify[deviceId];
+    if (!mods) {
+        if (!list.only) {
+            mods = {};
+            list.modify[deviceId] = mods;
+        } else {
+            control.skipped = true;
+            debug("wb2ha: skipping unincluded device {} ", deviceId);
+            return;
+        }
     }
     mods = mods[controlId];
     if (!mods) {
-        //debug("wb2ha: skipping control {}", controlId);
-        control.skipped = true;
-        return;
+        if (!list.only || allControls[deviceId]) {
+            mods = {};
+            mods[controlId] = mods;
+        } else {
+            control.skipped = true;
+            debug("wb2ha: skipping unincluded control {}", controlId);
+            return;
+        }
     }
     mods = mods.mods ? mods.mods : null; // modifier names for our control, may be omitted
-
-    control.processed = true;
 
     // collect all modifiers into one modifier object
     // initialise it with common values
@@ -157,12 +197,12 @@ function process(deviceId, controlId) {
     // take modifiers from class mods
     if (mods) {
         for (var mod in mods) {
-            _copyTypeModRW(control, control.discovery, cfg.mods[mods[mod]]);
+            _copyTypeModRW(control, control.discovery, list.mods[mods[mod]]);
         }
     }
 
     // lastly, take our own mod which will overwrite everything
-    _copyTypeModRW(control, control.discovery, entities[deviceId][controlId]);
+    _copyTypeModRW(control, control.discovery, list.modify[deviceId][controlId]);
 
     // add the explicit units
     if (!control.discovery.unit_of_measurement && control.meta.units) {
@@ -204,6 +244,13 @@ function _copyTypeMod(control, mod, src) {
     if (src.mod) {
         for (var mi in src.mod) {
             mod[mi] = src.mod[mi];
+        }
+    }
+    if (src.ifUnset) {
+        for (var mi in src.ifUnset) {
+            if (mod[mi] === undefined) {
+                mod[mi] = src.ifUnset[mi];
+            }
         }
     }
 }
@@ -262,6 +309,9 @@ function _poorMansTemplater(discovery, device, control) {
                     break;
                 case "config":
                     obj = cfg;
+                    break;
+                case "list":
+                    obj = list;
                     break;
                 case "devices":
                     obj = devices;
