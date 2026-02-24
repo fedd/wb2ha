@@ -256,7 +256,7 @@
                 "temperature_state_topic": "/devices/{device.id}/controls/{control.id}",
                 "temperature_unit": "C",
                 "action_topic": "/devices/{device.id}/controls/state",
-                "action_template": "{{ 'heating' if value == 1 else 'off' }}"
+                "action_template": "{{ 'heating' if value == 1 else 'idle' }}"
             }
         }
     }
