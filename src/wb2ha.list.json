@@ -1,0 +1,60 @@
+{
+    "house_power": {
+        "tariffDay": {},
+        "thisDayEnergyPay": {},
+        "thisDayEnergyDay": {},
+        "noPowerAlarm": {}
+    },
+    "wb-led_32": {
+        "Channel 4": {
+            "mods": [
+                "wbLedLight"
+            ]
+        },
+        "RGB Palette": {}
+    },
+    "fl1_hall_thermostat": {
+        "setPoint": {
+            "mods": [
+                "thermostat"
+            ]
+        }
+    },
+    "fl1_hall_sensor": {
+        "Temperature": {}, 
+        "Humidity": {}, 
+        "Sound Level": {}, 
+        "Illuminance": {}, 
+        "Max Motion": {
+            "mods": [
+                "motionPercent"
+            ]
+        },
+        "Current Motion": {
+            "mods": [
+                "motionPercent"
+            ]
+        },
+        "Buzzer": {}
+    },
+    "fl2_south_bedroom_sensor": {
+        "Temperature": {}, 
+        "Humidity": {}, 
+        "CO2": {}, 
+        "Air Quality (VOC)": {},
+        "Sound Level": {}, 
+        "Illuminance": {}, 
+        "Max Motion": {
+            "mods": [
+                "motionPercent"
+            ]
+        },
+        "Current Motion": {
+            "mods": [
+                "motionPercent"
+            ]
+        },
+        "Buzzer": {}
+    }
+}
+

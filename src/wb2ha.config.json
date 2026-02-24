@@ -1,0 +1,263 @@
+{
+    "haroot": "homeassistant",
+    "wbprefix": "w2h_",
+
+    "controlTypes": {
+        "sound_level": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            },
+            "mod": {
+                "device_class": "sound_pressure",
+                "unit_of_measurement": "dB"
+            }
+        },
+        "concentration": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            },
+            "mod": {
+                "device_class": "carbon_dioxide",
+                "unit_of_measurement": "ppm"
+            }
+        },
+        "rel_humidity": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            },
+            "mod": {
+                "device_class": "humidity",
+                "unit_of_measurement": "%"
+            }
+        },
+        "voltage": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            },
+            "mod": {            
+                "device_class": "voltage",
+                "unit_of_measurement": "V"
+            }
+        },
+        "lux": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            },
+            "mod": {
+                "device_class": "illuminance",
+                "unit_of_measurement": "lx"
+            }
+        },
+        "temperature": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            },
+            "mod": {
+                "device_class": "temperature",
+                "unit_of_measurement": "\u00b0C"
+            }
+        },
+
+        "range": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            }
+        },
+        "value": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "number"
+            }
+        },
+        "switch": {
+            "readonly": {
+                "type": "binary_sensor"
+            },
+            "writable": {
+                "type": "switch"
+            },
+            "mod": {
+                "payload_on": 1,
+                "payload_off": 0
+            }
+        },
+        "alarm": {
+            "readonly": {
+                "type": "binary_sensor"
+            },
+            "writable": {
+                "type": "switch"
+            },
+            "mod": {
+                "device_class": "problem",
+                "payload_on": 1,
+                "payload_off": 0
+            }
+        },
+        "text": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "text",
+                "mod": {
+                    "platform": "text"
+                }
+            }
+        },
+        "w1-id": {
+            "readonly": {
+                "type": "sensor"
+            },
+            "writable": {
+                "type": "text",
+                "mod": {
+                    "platform": "text"
+                }
+            }
+        },
+        "rgb": {
+            "type": "light",
+            "mod": {
+                "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
+                "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                "rgb_value_template": "{{ value.split(';') | join(',') }}",
+                "rgb_command_template": "{{ red }};{{ green }};{{ blue }}",
+
+                "state_topic": "/devices/{device.id}/controls/RGB Strip",
+                "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
+                "payload_on": 1,
+                "payload_off": 0
+            }
+        },
+        "pushbutton": {
+            "type": "button",
+            "mod": {
+                "payload_press": 1
+            }
+        }
+    },
+
+    "units": {
+        "ppb": {
+            "mod": {
+                "device_class": "volatile_organic_compounds_parts",
+                "unit_of_measurement": "ppb"
+            }
+        }, 
+        "₽": {
+            "mod": {
+                "device_class": "monetary",
+                "unit_of_measurement": "RUR"
+            }
+        },
+        "%, RH": {
+            "mod": {
+                "device_class": "humidity",
+                "unit_of_measurement": "%"
+            }
+        },
+        "mbar": {
+            "mod": {
+                "device_class": "pressure"
+            }
+        },
+        "bar": {
+            "mod": {
+                "device_class": "pressure"
+            }
+        },
+        "deg C": {
+            "mod": {
+                "device_class": "temperature",
+                "unit_of_measurement": "\u00b0C"
+            }
+        },
+        "V": {
+            "mod": {
+                "device_class": "voltage"
+            }
+        },
+        "W": {
+            "mod": {
+                "device_class": "power"
+            }
+        },
+        "kWh": {
+            "mod": {
+                "device_class": "energy"
+            }
+        },
+        "s": {
+            "mod": {
+                "device_class": "duration"
+            }
+        },
+        "ms": {
+            "mod": {
+                "device_class": "duration"
+            }
+        }
+    },
+
+    "mods": {
+        "motionPercent": {
+            "mod": {
+                "icon": "mdi:motion-sensor",
+                "unit_of_measurement": "%"
+            }
+        },
+        "wbLedLight": {
+            "mod": {
+                "brightness_state_topic": "/devices/{device.id}/controls/{control.id} Brightness",
+                "brightness_command_topic": "/devices/{device.id}/controls/{control.id} Brightness/on",
+                "brightness_scale": 100
+            },
+            "type": "light"
+        },
+        "thermostat": {
+            "type": "climate",
+            "mod": {
+                "preset_modes": [
+                    "off",
+                    "low",
+                    "on",
+                    "hi"
+                ],
+                "preset_mode_state_topic": "/devices/{device.id}/controls/mode",
+                "preset_mode_command_topic": "/devices/{device.id}/controls/mode/on",
+                "current_temperature_topic": "/devices/{device.id}/controls/temperature",
+                "max_temp": "{control.meta.max}",
+                "min_temp": "{control.meta.min}",
+                "temperature_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                "temperature_state_topic": "/devices/{device.id}/controls/{control.id}",
+                "temperature_unit": "C",
+                "action_topic": "/devices/{device.id}/controls/state",
+                "action_template": "{{ 'heating' if value == 1 else 'off' }}"
+            }
+        }
+    }
+}
