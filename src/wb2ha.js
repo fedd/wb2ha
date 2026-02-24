@@ -42,7 +42,7 @@ trackMqtt("/devices/+/meta", function (message) {
     if (!devices[deviceId]) {
         devices[deviceId] = {
             id: deviceId,
-            idSmall: cfg.wbprefix + deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
+            idSmall: deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
             controls: {}
         };
     }
@@ -64,7 +64,7 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
     if (message.value.length === 0) {
         if (devices[deviceId] && devices[deviceId].controls[controlId]) {
             if (devices[deviceId].controls[controlId].processed) {
-                debug("wb2ha: UNpublishing control {} from {}", controlId,
+                log("wb2ha: UNpublishing control {} from {}", controlId,
                         devices[deviceId].controls[controlId].topic);
                 publish(devices[deviceId].controls[controlId].topic, "", 2, true);
             }
@@ -76,7 +76,7 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
     if (!devices[deviceId]) {
         devices[deviceId] = {
             id: deviceId,
-            idSmall: cfg.wbprefix + deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
+            idSmall: deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
             controls: {}
         };
     }
@@ -99,7 +99,19 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
 // track the control metas
 function process(deviceId, controlId) {
 
+
     var device = devices[deviceId];
+
+    if (device.skipped) {
+        return;
+    }
+
+    if (list.exclude[deviceId]) {
+        device.skipped = true;
+        debug("wb2ha: excluding device {} as per config", deviceId);
+        return;
+    }
+
     var control = device.controls[controlId];
 
     if (control.processed) {
@@ -107,11 +119,6 @@ function process(deviceId, controlId) {
     }
     control.processed = true;
 
-    if (list.exclude[deviceId]) {
-        control.skipped = true;
-        debug("wb2ha: excluding device {} as per config", deviceId);
-        return;
-    }
     if (list.exclude[deviceId + "/" + controlId]) {
         control.skipped = true;
         debug("wb2ha: skipping control {} as per config", controlId);
@@ -124,7 +131,7 @@ function process(deviceId, controlId) {
             mods = {};
             list.modify[deviceId] = mods;
         } else {
-            control.skipped = true;
+            device.skipped = true;
             debug("wb2ha: skipping unincluded device {} ", deviceId);
             return;
         }
@@ -146,9 +153,14 @@ function process(deviceId, controlId) {
     // initialise it with common values
     control.discovery = {
         device: {
-            identifiers: device.idSmall,
+            identifiers: [device.idSmall, deviceId],
             manufacturer: "WirenBoard",
             name: deviceId
+        },
+        origin: {
+            "name": "wb2ha",
+            "sw": "0.1",
+            "url": "https://github.com/fedd/wb2ha"
         },
         availability_mode: "latest",
         enabled_by_default: true,
@@ -224,13 +236,14 @@ function process(deviceId, controlId) {
     control.topic =
             cfg.haroot + "/" +
             control.type + "/" +
+//            cfg.node + "/" +
             device.idSmall + "/" +
             control.idSmall + "/config";
 
     // replace all {device.id} and {control.meta.enum...} placeholders
     _poorMansTemplater(control.discovery, device, control);
 
-    debug("wb2ha: publishing control {} to {}", control.id, control.topic);
+    log("wb2ha: publishing control {} to {}", control.id, control.topic);
     publish(control.topic, JSON.stringify(control.discovery), 2, true);
 
 }

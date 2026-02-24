@@ -5,7 +5,8 @@
         "system/Current uptime",
         "fl2_north_bedroom_sensor",
         "fl1_hall_sensor",
-        "wb-led_32"
+        "wb-led_32",
+        "fl1_living_sensor"
     ],
 
     "exclude": [
@@ -25,6 +26,13 @@
         "thermostat": {
             "type": "climate",
             "mod": {
+                "current_temperature_topic": "/devices/{device.id}/controls/temperature",
+                "max_temp": "{control.meta.max}",
+                "min_temp": "{control.meta.min}",
+                "temperature_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                "temperature_state_topic": "/devices/{device.id}/controls/{control.id}",
+                "temperature_unit": "C",
+
                 "preset_modes": [
                     "off",
                     "low",
@@ -33,12 +41,16 @@
                 ],
                 "preset_mode_state_topic": "/devices/{device.id}/controls/mode",
                 "preset_mode_command_topic": "/devices/{device.id}/controls/mode/on",
-                "current_temperature_topic": "/devices/{device.id}/controls/temperature",
-                "max_temp": "{control.meta.max}",
-                "min_temp": "{control.meta.min}",
-                "temperature_command_topic": "/devices/{device.id}/controls/{control.id}/on",
-                "temperature_state_topic": "/devices/{device.id}/controls/{control.id}",
-                "temperature_unit": "C",
+
+                "modes": [
+                    "heat",
+                    "off"
+                ],
+                "mode_state_topic": "/devices/{device.id}/controls/mode",
+                "mode_state_template": "{{ 'off' if value == 'off' else 'heat' }}",
+                "mode_command_topic": "/devices/{device.id}/controls/mode/on",
+                "mode_command_template": "{{ 'off' if value == 'off' else 'on' }}",
+
                 "action_topic": "/devices/{device.id}/controls/state",
                 "action_template": "{{ 'heating' if value == 1 else 'idle' }}"
             }
@@ -66,34 +78,18 @@
             }
         },
         "fl1_hall_sensor": {
-            "Max Motion": {
-                "mods": [
-                    "motionPercent"
-                ]
-            },
-            "Current Motion": {
-                "mods": [
-                    "motionPercent"
-                ]
-            }
+            "Max Motion": {},
+            "Current Motion": {}
         },
         "fl2_south_bedroom_sensor": {
-            "Temperature": {}, 
-            "Humidity": {}, 
-            "CO2": {}, 
+            "Temperature": {},
+            "Humidity": {},
+            "CO2": {},
             "Air Quality (VOC)": {},
-            "Sound Level": {}, 
-            "Illuminance": {}, 
-            "Max Motion": {
-                "mods": [
-                    "motionPercent"
-                ]
-            },
-            "Current Motion": {
-                "mods": [
-                    "motionPercent"
-                ]
-            },
+            "Sound Level": {},
+            "Illuminance": {},
+            "Max Motion": {},
+            "Current Motion": {},
             "Buzzer": {}
         }
     }

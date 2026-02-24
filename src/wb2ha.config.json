@@ -1,6 +1,6 @@
 {
     "haroot": "homeassistant",
-    "wbprefix": "w2h_",
+    "node": "w2h",
 
     "controlTypes": {
         "sound_level": {
@@ -46,7 +46,7 @@
             "writable": {
                 "type": "number"
             },
-            "mod": {            
+            "mod": {
                 "device_class": "voltage",
                 "unit_of_measurement": "V"
             }
@@ -170,7 +170,7 @@
                 "device_class": "volatile_organic_compounds_parts",
                 "unit_of_measurement": "ppb"
             }
-        }, 
+        },
         "₽": {
             "mod": {
                 "device_class": "monetary",
