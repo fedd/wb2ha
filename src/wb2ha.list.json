@@ -52,7 +52,7 @@
                 "mode_command_template": "{{ 'off' if value == 'off' else 'on' }}",
 
                 "action_topic": "/devices/{device.id}/controls/state",
-                "action_template": "{{ 'heating' if value == 1 else 'idle' }}"
+                "action_template": "{{ 'heating' if value == '1' else 'idle' }}"
             }
         }
     },
@@ -71,6 +71,13 @@
             }
         },
         "fl2_south_toilet_thermostat": {
+            "setPoint": {
+                "mods": [
+                    "thermostat"
+                ]
+            }
+        },
+        "fl1_living_thermostat": {
             "setPoint": {
                 "mods": [
                     "thermostat"

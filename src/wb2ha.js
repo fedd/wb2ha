@@ -63,7 +63,7 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
 
     if (message.value.length === 0) {
         if (devices[deviceId] && devices[deviceId].controls[controlId]) {
-            if (devices[deviceId].controls[controlId].processed) {
+            if (devices[deviceId].controls[controlId].topic) {
                 log("wb2ha: UNpublishing control {} from {}", controlId,
                         devices[deviceId].controls[controlId].topic);
                 publish(devices[deviceId].controls[controlId].topic, "", 2, true);
@@ -198,8 +198,8 @@ function process(deviceId, controlId) {
 
     // deduce mods from units of measurement
     if (control.meta.units) {
+        control.discovery.unit_of_measurement = control.meta.units;
         _copyTypeModRW(control, control.discovery, cfg.units[control.meta.units]);
-
     }
     // deduce mods from type
     if (control.meta.type) {
@@ -215,12 +215,6 @@ function process(deviceId, controlId) {
 
     // lastly, take our own mod which will overwrite everything
     _copyTypeModRW(control, control.discovery, list.modify[deviceId][controlId]);
-
-    // add the explicit units
-    if (!control.discovery.unit_of_measurement && control.meta.units) {
-        control.discovery.unit_of_measurement = control.meta.units;
-    }
-
 
     // enum options
     if (control.meta.enum) {

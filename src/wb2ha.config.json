@@ -8,7 +8,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             },
             "mod": {
                 "device_class": "sound_pressure",
@@ -20,7 +23,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             },
             "mod": {
                 "device_class": "carbon_dioxide",
@@ -32,7 +38,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             },
             "mod": {
                 "device_class": "humidity",
@@ -44,7 +53,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             },
             "mod": {
                 "device_class": "voltage",
@@ -56,7 +68,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             },
             "mod": {
                 "device_class": "illuminance",
@@ -68,7 +83,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             },
             "mod": {
                 "device_class": "temperature",
@@ -81,7 +99,10 @@
                 "type": "sensor"
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "slider"
+                }
             }
         },
         "value": {
@@ -92,7 +113,10 @@
                 }
             },
             "writable": {
-                "type": "number"
+                "type": "number",
+                "mod": {
+                    "mode": "box"
+                }
             }
         },
         "switch": {
@@ -172,6 +196,9 @@
             }
         },
         "₽": {
+            "writable": {
+                "step": 0.01
+            },
             "mod": {
                 "device_class": "monetary",
                 "unit_of_measurement": "RUR"
@@ -214,6 +241,11 @@
                 "device_class": "energy"
             }
         },
+        "Hz": {
+            "mod": {
+                "device_class": "frequency"
+            }
+        },
         "s": {
             "mod": {
                 "device_class": "duration"
@@ -224,6 +256,5 @@
                 "device_class": "duration"
             }
         }
-    },
-
+    }
 }
