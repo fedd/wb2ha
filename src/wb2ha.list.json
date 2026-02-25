@@ -65,7 +65,8 @@
                 "state_topic": "zigbee2mqtt/{device.id}",
                 "state_value_template": "{{ value_json.{control.id} }}",
                 "payload_off": "OFF",
-                "payload_on": "ON"
+                "payload_on": "ON",
+                "command_topic": "zigbee2mqtt/{device.id}/{path}/set"
             }
         },
         "zigbeeSwitchFan": {
@@ -97,8 +98,8 @@
                 "mods": [
                     "zigbeeSwitchLight"
                 ],
-                "mod": {
-                    "command_topic": "zigbee2mqtt/fl2_north_toilet_light_fan/right/set"
+                "var": {
+                    "path": "right"
                 }
             }
         },
@@ -106,12 +107,18 @@
             "state_left": {
                 "mods": [
                     "zigbeeSwitchLight"
-                ]
+                ],
+                "var": {
+                    "path": "left"
+                }
             },
             "state_right": {
                 "mods": [
                     "zigbeeSwitchLight"
-                ]
+                ],
+                "var": {
+                    "path": "right"
+                }
             }
         },
         "wb-led_32": {

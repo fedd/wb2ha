@@ -52,7 +52,6 @@ trackMqtt("/devices/+/meta", function (message) {
     for (var controlId in devices[deviceId].controls) {
         process(deviceId, controlId);
     }
-
 });
 
 trackMqtt("/devices/+/controls/+/meta", function (message) {
@@ -86,6 +85,7 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
         idSmall: controlId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
         deviceId: deviceId,
         meta: JSON.parse(message.value),
+        "var": {},
         processed: false//,
 //        published: false,
 //        remove: false
@@ -98,7 +98,6 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
 
 // track the control metas
 function process(deviceId, controlId) {
-
 
     var device = devices[deviceId];
 
@@ -238,7 +237,7 @@ function process(deviceId, controlId) {
             control.idSmall + "/config";
 
     // replace all {device.id} and {control.meta.enum...} placeholders
-    _poorMansTemplater(control.discovery, device, control);
+    _poorMansTemplater(control, device);
 
     log("wb2ha: publishing control {} to {}", control.id, control.topic);
     publish(control.topic, JSON.stringify(control.discovery), 2, true);
@@ -250,6 +249,11 @@ function process(deviceId, controlId) {
 function _copyTypeMod(control, mod, src) {
     if (src.type) {
         control.type = src.type;
+    }
+    if (src.var) {
+        for (var mi in src.var) {
+            control.var[mi] = src.var[mi];
+        }
     }
     if (src.mod) {
         for (var mi in src.mod) {
@@ -291,9 +295,9 @@ function _poorMansRetriever(obj, str) {
     }
 }
 
-function _poorMansTemplater(discovery, device, control) {
-    var str = JSON.stringify(discovery);
-    var placeholders = str.match(/\{[A-Za-z0-9_]+\.[A-Za-z0-9_\.]+\}/g);
+function _poorMansTemplater(control, device) {
+    var str = JSON.stringify(control.discovery);
+    var placeholders = str.match(/\{[A-Za-z0-9_\.]+\}/g);
     if (!placeholders) {
         return;
     }
@@ -305,44 +309,50 @@ function _poorMansTemplater(discovery, device, control) {
             occurences[placeholders[i]]++;
         } else {
             occurences[placeholders[i]] = 1;
-            var p = placeholders[i].slice(1, -1);
-            var variable = p.slice(0, placeholders[i].indexOf(".") - 1);
-            var obj;
-            //debug("{} p={} variable={}", placeholders[i], p, variable);
-            var retain = false;
-            switch (variable) {
-                case "device":
-                    obj = device;
-                    break;
-                case "control":
-                    obj = control;
-                    break;
-                case "config":
-                    obj = cfg;
-                    break;
-                case "list":
-                    obj = list;
-                    break;
-                case "devices":
-                    obj = devices;
-                    break;
-                default:
-                    replacements[placeholders[i]] = placeholders[i]; // retain
-                    //continue;
-                    retain = true;
-                    break;  // ?
-            }
-            if (!retain) {
-                replacements[placeholders[i]] =
-                        _poorMansRetriever(obj, p.slice(variable.length + 1));
+            var p = placeholders[i].slice(1, -1); // strip curlies
+            //debug("wb2ha: {} p={}", placeholders[i], p);
+
+            if (control.var[p]) {// if present in vars as is
+
+                replacements[placeholders[i]] = control.var[p];
+
+            } else {
+                var variable = p.slice(0, placeholders[i].indexOf(".") - 1);
+                var obj;
+                //debug("{} p={} variable={}", placeholders[i], p, variable);
+                var retain = false;
+                switch (variable) {
+                    case "device":
+                        obj = device;
+                        break;
+                    case "control":
+                        obj = control;
+                        break;
+                    case "config":
+                        obj = cfg;
+                        break;
+                    case "list":
+                        obj = list;
+                        break;
+                    case "devices":
+                        obj = devices;
+                        break;
+                    default:
+                        replacements[placeholders[i]] = placeholders[i]; // retain
+                        retain = true;
+                        break;  // ?
+                }
+                if (!retain) {
+                    replacements[placeholders[i]] =
+                            _poorMansRetriever(obj, p.slice(variable.length + 1));
+                }
             }
             //debug("made {} for {}", replacements[placeholders[i]], placeholders[i]);
         }
     }
+
     // now replace all placeholders with those values
-
     //debug("replacements: {}", JSON.stringify(replacements));
-
     for (var p in replacements) {
         //debug("replacing p {} with {}", p, replacements[p]);
         for (var i = 0; i < occurences[p]; i++) { // no replaceAll method :(
@@ -354,6 +364,6 @@ function _poorMansTemplater(discovery, device, control) {
     str = JSON.parse(str);
     // and copy all back to the discovery
     for (p in str) {
-        discovery[p] = str[p]; // no idea if es5 has anything wiser
+        control.discovery[p] = str[p]; // no idea if es5 has anything wiser
     }
 }
