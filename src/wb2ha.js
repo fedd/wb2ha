@@ -1,4 +1,6 @@
-// Convert Wirenboard metas to Home Assistant MQTT Discovery configs
+// Convert Wirenboard metas to Home Assistant MQTT Discovery configs.
+// A Wirenboard rule.
+// Author: fedd@vsetec.com
 
 var cfg = readConfig("/etc/wb-rules/wb2ha.config.json");
 var list = readConfig("/etc/wb-rules/wb2ha.list.json");
@@ -31,6 +33,7 @@ if (list.only) {
     }
 }
 
+// track devices
 trackMqtt("/devices/+/meta", function (message) {
     var stripped = message.topic.slice("/devices/".length);
     var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
@@ -49,11 +52,13 @@ trackMqtt("/devices/+/meta", function (message) {
 
     devices[deviceId].meta = JSON.parse(message.value);
 
+    // process the devices found so far
     for (var controlId in devices[deviceId].controls) {
         process(deviceId, controlId);
     }
 });
 
+// track controls
 trackMqtt("/devices/+/controls/+/meta", function (message) {
     var stripped = message.topic.slice("/devices/".length);
     var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
@@ -86,17 +91,15 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
         deviceId: deviceId,
         meta: JSON.parse(message.value),
         "var": {},
-        processed: false//,
-//        published: false,
-//        remove: false
+        processed: false
     };
 
+    // havent encountered a device yet
     if (devices[deviceId].meta) {
         process(deviceId, controlId);
     }
 });
 
-// track the control metas
 function process(deviceId, controlId) {
 
     var device = devices[deviceId];
@@ -236,7 +239,7 @@ function process(deviceId, controlId) {
             device.idSmall + "_" +
             control.idSmall + "/config";
 
-    // replace all {device.id} and {control.meta.enum...} placeholders
+    // replace all {var}, {device.id} and {control.meta.enum...} placeholders
     _poorMansTemplater(control, device);
 
     log("wb2ha: publishing control {} to {}", control.id, control.topic);
@@ -284,8 +287,6 @@ function _copyTypeModRW(control, mod, src) {
     }
 }
 
-//control.meta.max
-//meta.max
 function _poorMansRetriever(obj, str) {
     var pos = str.indexOf(".");
     if (pos <= 0) {
@@ -302,7 +303,7 @@ function _poorMansTemplater(control, device) {
         return;
     }
     var replacements = {};
-    var occurences = {}; // no replaceAll method, well count
+    var occurences = {}; // no replaceAll method, so we'll count
     // find values for all placeholders
     for (var i in placeholders) {
         if (replacements[placeholders[i]]) {
