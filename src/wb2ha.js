@@ -182,8 +182,8 @@ function process(deviceId, controlId) {
             }],
         state_topic: "/devices/" + deviceId + "/controls/" + controlId,
         name: controlId,
-        unique_id: device.idSmall + "_" + control.idSmall,
-        object_id: device.idSmall + "_" + control.idSmall
+        unique_id: device.idSmall + "_" + control.idSmall
+//        object_id: device.idSmall + "_" + control.idSmall, // deprecated
     };
 
     if (control.meta.readonly === false) {
@@ -227,11 +227,14 @@ function process(deviceId, controlId) {
         }
     }
 
+    // replace the deprecated "object_id"
+    control.discovery.default_entity_id = control.type + "." + device.idSmall + "_" + control.idSmall;
+
     control.topic =
             cfg.haroot + "/" +
             control.type + "/" +
-//            cfg.node + "/" +
-            device.idSmall + "/" +
+            cfg.node + "/" +
+            device.idSmall + "_" +
             control.idSmall + "/config";
 
     // replace all {device.id} and {control.meta.enum...} placeholders

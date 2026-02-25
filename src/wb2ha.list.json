@@ -54,15 +54,66 @@
                 "action_topic": "/devices/{device.id}/controls/state",
                 "action_template": "{{ 'heating' if value == '1' else 'idle' }}"
             }
+        },
+        "zigbeeSwitchLight": {
+            "type": "light",
+            "mod": {
+                "availability": {
+                    "topic": "zigbee2mqtt/bridge/state",
+                    "value_template": "{{ value_json.state }}"
+                },
+                "state_topic": "zigbee2mqtt/{device.id}",
+                "state_value_template": "{{ value_json.{control.id} }}",
+                "payload_off": "OFF",
+                "payload_on": "ON"
+            }
+        },
+        "zigbeeSwitchFan": {
+            "type": "fan",
+            "mod": {
+                "availability": {
+                    "topic": "zigbee2mqtt/bridge/state",
+                    "value_template": "{{ value_json.state }}"
+                },
+                "state_topic": "zigbee2mqtt/{device.id}",
+                "state_value_template": "{{ value_json.{control.id} }}",
+                "payload_off": "OFF",
+                "payload_on": "ON",
+                "command_topic": "zigbee2mqtt/{device.id}/set",
+                "command_template": "{\"{control.id}\": \"{{ value }}\"}"
+            }
         }
     },
 
     "modify": {
 
-        "dev": {
-
+        "fl2_north_toilet_light_fan": {
+            "state_left": {
+                "mods": [
+                    "zigbeeSwitchFan"
+                ]
+            },
+            "state_right": {
+                "mods": [
+                    "zigbeeSwitchLight"
+                ],
+                "mod": {
+                    "command_topic": "zigbee2mqtt/fl2_north_toilet_light_fan/right/set"
+                }
+            }
         },
-
+        "fl1_boiler_toilet_light": {
+            "state_left": {
+                "mods": [
+                    "zigbeeSwitchLight"
+                ]
+            },
+            "state_right": {
+                "mods": [
+                    "zigbeeSwitchLight"
+                ]
+            }
+        },
         "wb-led_32": {
             "Channel 4": {
                 "mods": [
