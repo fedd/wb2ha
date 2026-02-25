@@ -2,36 +2,16 @@
 // A Wirenboard rule.
 // Author: fedd@vsetec.com
 
-var cfg = readConfig("/etc/wb-rules/wb2ha.config.json");
-var list = readConfig("/etc/wb-rules/wb2ha.list.json");
+var CONFIGFILENAME = "/etc/wb-rules/wb2ha.config.json";
+var LISTFILENAME = "/etc/wb-rules/wb2ha.list.json";
 
+var cfg;
+var list;
+var allControls;
 var devices = {};
+var inotifyIsWorking = false;
 
-// rework includeds
-var allControls = {};
-if (list.only) {
-    for (var i in list.only) {
-        var splitted = list.only[i].split("/");
-        if (splitted.length === 1) { // all controls
-            allControls[splitted[0]] = true;
-            // also add to mods without controls
-            if (!list.modify[splitted[0]]) {
-                list.modify[splitted[0]] = {};
-            }
-        } else { // only select controls. just add to mods.
-            if (splitted.length !== 2) {
-                log("wb2ha: wrong include: {}", list.only[i]);
-            } else {
-                if (!list.modify[splitted[0]]) {
-                    list.modify[splitted[0]] = {};
-                }
-                if (!list.modify[splitted[0]][splitted[1]]) {
-                    list.modify[splitted[0]][splitted[1]] = {};
-                }
-            }
-        }
-    }
-}
+_loadConfig();
 
 // track devices
 trackMqtt("/devices/+/meta", function (message) {
@@ -54,7 +34,7 @@ trackMqtt("/devices/+/meta", function (message) {
 
     // process the devices found so far
     for (var controlId in devices[deviceId].controls) {
-        process(deviceId, controlId);
+        _process(deviceId, controlId);
     }
 });
 
@@ -96,11 +76,11 @@ trackMqtt("/devices/+/controls/+/meta", function (message) {
 
     // havent encountered a device yet
     if (devices[deviceId].meta) {
-        process(deviceId, controlId);
+        _process(deviceId, controlId);
     }
 });
 
-function process(deviceId, controlId) {
+function _process(deviceId, controlId) {
 
     var device = devices[deviceId];
 
@@ -129,24 +109,24 @@ function process(deviceId, controlId) {
 
     var mods = list.modify[deviceId];
     if (!mods) {
-        if (!list.only) {
-            mods = {};
-            list.modify[deviceId] = mods;
-        } else {
+        if (list.only) {
             device.skipped = true;
             debug("wb2ha: skipping unincluded device {} ", deviceId);
             return;
+        } else {
+            mods = {};
+            list.modify[deviceId] = mods;
         }
     }
     mods = mods[controlId];
     if (!mods) {
-        if (!list.only || allControls[deviceId]) {
-            mods = {};
-            mods[controlId] = mods;
-        } else {
+        if (list.only && !allControls[deviceId]) {
             control.skipped = true;
             debug("wb2ha: skipping unincluded control {}", controlId);
             return;
+        } else {
+            mods = {};
+            mods[controlId] = mods;
         }
     }
     mods = mods.mods ? mods.mods : null; // modifier names for our control, may be omitted
@@ -187,6 +167,10 @@ function process(deviceId, controlId) {
         unique_id: device.idSmall + "_" + control.idSmall
 //        object_id: device.idSmall + "_" + control.idSmall, // deprecated
     };
+
+    if (device.meta.driver) {
+        control.discovery.device.model = device.meta.driver;
+    }
 
     if (control.meta.readonly === false) {
         control.discovery.command_topic = "/devices/" + deviceId + "/controls/" + controlId + "/on";
@@ -247,7 +231,67 @@ function process(deviceId, controlId) {
 
 }
 
-//////////////////////////////////////////////////////////////////
+setInterval(function () {
+    if (!inotifyIsWorking) {
+        inotifyIsWorking = true;
+        runShellCommand("inotifywait -e modify " + CONFIGFILENAME + " " + LISTFILENAME, {
+            exitCallback: function () {
+                inotifyIsWorking = false;
+                log("wb2ha: config changed");
+
+                _loadConfig();
+
+                for (var deviceId in devices) { // devices are kept updated by trackMqtt
+                    devices[deviceId].skipped = false;
+                    for (var controlId in devices[deviceId].controls) {
+                        if (devices[deviceId].controls[controlId].topic) {
+                            log("wb2ha: UNpublishing control {} from {} before reprocessing", controlId,
+                                    devices[deviceId].controls[controlId].topic);
+                            publish(devices[deviceId].controls[controlId].topic, "", 2, true);
+                        }
+                        // prepare to reprocess
+                        devices[deviceId].controls[controlId].processed = false;
+                        devices[deviceId].controls[controlId].skipped = false;
+                        delete devices[deviceId].controls[controlId].type;
+
+                        // reprocess
+                        _process(deviceId, controlId);
+                    }
+                }
+            }
+        });
+    }
+}, 1000 * 30);  // rerun the config file watcher
+
+function _loadConfig() {
+    allControls = {};
+    cfg = readConfig(CONFIGFILENAME);
+    list = readConfig(LISTFILENAME);
+    // rework includeds
+    if (list.only) {
+        for (var i in list.only) {
+            var splitted = list.only[i].split("/");
+            if (splitted.length === 1) { // all controls
+                allControls[splitted[0]] = true;
+                // also add to mods without controls
+                if (!list.modify[splitted[0]]) {
+                    list.modify[splitted[0]] = {};
+                }
+            } else { // only select controls. just add to mods.
+                if (splitted.length !== 2) {
+                    log("wb2ha: wrong include: {}", list.only[i]);
+                } else {
+                    if (!list.modify[splitted[0]]) {
+                        list.modify[splitted[0]] = {};
+                    }
+                    if (!list.modify[splitted[0]][splitted[1]]) {
+                        list.modify[splitted[0]][splitted[1]] = {};
+                    }
+                }
+            }
+        }
+    }
+}
 
 function _copyTypeMod(control, mod, src) {
     if (src.type) {
