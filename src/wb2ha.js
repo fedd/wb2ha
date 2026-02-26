@@ -7,6 +7,8 @@
 var CONFIGFILENAME = "/etc/wb-rules/wb2ha.config.json";
 var LISTFILENAME = "/etc/wb-rules/wb2ha.list.json";
 
+var debugging = false;
+
 var cfg;
 var list;
 var allControls;
@@ -109,29 +111,29 @@ function _process(deviceId, controlId) {
         return;
     }
 
-    var mods = list.modify[deviceId];
-    if (!mods) {
+    var entry = list.modify[deviceId];
+    if (!entry) {
         if (list.only) {
             device.skipped = true;
             debug("wb2ha: skipping unincluded device {} ", deviceId);
             return;
         } else {
-            mods = {};
-            list.modify[deviceId] = mods;
+            entry = {};
+            list.modify[deviceId] = entry;
         }
     }
-    mods = mods[controlId];
-    if (!mods) {
+    entry = entry[controlId];
+    if (!entry) {
         if (list.only && !allControls[deviceId]) {
             control.skipped = true;
             debug("wb2ha: skipping unincluded control {}", controlId);
             return;
         } else {
-            mods = {};
-            mods[controlId] = mods;
+            entry = {};
+            entry[controlId] = entry;
         }
     }
-    mods = mods.namedModifiers ? mods.namedModifiers : null; // modifier names for our control, may be omitted
+    //entry = entry.namedModifiers ? entry.namedModifiers : null; // modifier names for our control, may be omitted
 
     // collect all modifiers into one modifier object
     // initialise it with common values
@@ -195,14 +197,18 @@ function _process(deviceId, controlId) {
     }
 
     // take modifiers from named mods
-    if (mods) {
-        for (var mod in mods) {
-            _copyTypeModRW(control, list.namedModifiers[mods[mod]]);
-        }
-    }
+//    if (entry) {
+//        var collectedNamedModifiers = {};
+//        for (var mod in entry) {
+//            if (!collectedNamedModifiers[entry[mod]]) {
+//                collectedNamedModifiers[entry[mod]] = true;
+//                _copyTypeModRW(control, list.namedModifiers[entry[mod]], collectedNamedModifiers);
+//            }
+//        }
+//    }
 
     // lastly, take our own mod which will overwrite everything
-    _copyTypeModRW(control, list.modify[deviceId][controlId]);
+    _copyTypeModRW(control, list.modify[deviceId][controlId], {});
 
     // enum options
     if (control.meta.enum) {
@@ -229,7 +235,11 @@ function _process(deviceId, controlId) {
     _poorMansTemplater(control, device);
 
     log("wb2ha: publishing control {} to {}", control.id, control.topic);
-    publish(control.topic, JSON.stringify(control.discovery), 2, true);
+    if (debugging) {
+        log.warning("{} {}", control.topic, JSON.stringify(control.discovery));
+    } else {
+        publish(control.topic, JSON.stringify(control.discovery), 2, true);
+    }
 
 }
 
@@ -287,6 +297,9 @@ function _loadConfig() {
     if (!list.modify) {
         list.modify = {};
     }
+    if (!list.exclude) {
+        list.exclude = [];
+    }
 
     var toAdd = {};
     var toDelete = [];
@@ -299,7 +312,9 @@ function _loadConfig() {
             // transform the bare string or array
             list.modify[i] = _stringOrArrayToMods(list.modify[i]);
 
-            toAdd[splitted[0]] = list.modify[splitted[0]];
+            if (!toAdd[splitted[0]]) {
+                toAdd[splitted[0]] = list.modify[splitted[0]];
+            }
             if (toAdd[splitted[0]]) {// we have such a device
                 if (toAdd[splitted[0]][splitted[1]]) { // and even control
                     // transform a possible string
@@ -333,6 +348,10 @@ function _loadConfig() {
         for (var j in list.modify[i]) {
             list.modify[i][j] = _stringOrArrayToMods(list.modify[i][j]);
         }
+    }
+
+    if (debugging) {
+        log.warning("{}", JSON.stringify(list.modify));
     }
 
     // rework includeds
@@ -395,10 +414,18 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
     }
 }
 
-function _copyTypeModRW(control, src) {
-    var mod = control.discovery;
+function _copyTypeModRW(control, src, collectedNamedModifiers) {
     if (src) {
-        _copyTypeMod(control, mod, src);
+        var mod = control.discovery;
+        if (collectedNamedModifiers && src.namedModifiers) { // supermodifiers
+            for (var i in src.namedModifiers) {
+                if (!collectedNamedModifiers[src.namedModifiers[i]]) { // avoid circular supermodifiers
+                    collectedNamedModifiers[src.namedModifiers[i]] = true;
+                    _copyTypeModRW(control, list.namedModifiers[src.namedModifiers[i]], collectedNamedModifiers);
+                }
+            }
+        }
+        _copyTypeMod(control, mod, src, false);
         if (control.meta.readonly) {
             if (src.readonly) {
                 _copyTypeMod(control, mod, src.readonly, false);
@@ -411,16 +438,84 @@ function _copyTypeModRW(control, src) {
     }
 }
 
-function _poorMansRetriever(obj, str) {
+function _retriever(obj, str) {
     var pos = str.indexOf(".");
     if (pos <= 0) {
         return obj[str];
     } else {
-        return _poorMansRetriever(obj[str.slice(0, pos)], str.slice(pos + 1));
+        return _retriever(obj[str.slice(0, pos)], str.slice(pos + 1));
     }
 }
 
+
+function _traverse(obj, control, device) {
+    for (var fld in obj) {
+        if (typeof obj[fld] === 'string' || obj[fld] instanceof String) {
+            //debug("Field {}, value: {}", fld, obj[fld]);
+            if (obj[fld][0] === "{" && obj[fld][obj[fld].length - 1] === "}") { // the whole field is a replacer
+                var ret = _returnValue(obj[fld], control, device);
+                //debug("Result {}", ret);
+                if (ret !== undefined) {
+                    obj[fld] = ret;
+                }
+            }
+        } else {
+            _traverse(obj[fld], control, device);
+        }
+    }
+}
+
+function _returnValue(expression, control, device) {
+
+    expression = expression.slice(1, -1); // strip curly brackets
+
+    if (control.var[expression] !== undefined) {
+        //debug("Found {} with {}",control.var[expression], expression);
+        return control.var[expression];
+    }
+
+    var dotPos = expression.indexOf(".");
+    if (dotPos <= 0) {
+        //debug("no dot in expr {}", expression);
+        return;
+    }
+    var variable = expression.slice(0, dotPos);
+    var obj;
+    switch (variable) {
+        case "device":
+            obj = device;
+            break;
+        case "control":
+            obj = control;
+            break;
+        case "config":
+            obj = cfg;
+            break;
+        case "list":
+            obj = list;
+            break;
+        case "devices":
+            obj = devices;
+            break;
+        default:
+            //return; illegal here, as well as continue
+            break;
+    }
+    //debug("retrieve {} from {} which is {}", expression, variable, JSON.stringify(obj));
+    if (!obj) {
+        return;
+    }
+    //debug("retrieve {} from {} which is {}", expression, variable. JSON.stringify(obj));
+    return _retriever(obj, expression.slice(variable.length + 1));
+
+}
+
 function _poorMansTemplater(control, device) {
+
+    // traverse the discovery and replace pure field values
+    _traverse(control.discovery, control, device);
+
+    // now mass replace the rest
     var str = JSON.stringify(control.discovery);
     var placeholders = str.match(/\{[A-Za-z0-9_\.]+\}/g);
     if (!placeholders) {
@@ -429,48 +524,20 @@ function _poorMansTemplater(control, device) {
     var replacements = {};
     var occurences = {}; // no replaceAll method, so we'll count
     // find values for all placeholders
+    //debug("Placeholders: {}", JSON.stringify(placeholders));
+
     for (var i in placeholders) {
-        if (replacements[placeholders[i]]) {
+        if (replacements[placeholders[i]] !== undefined) {
             occurences[placeholders[i]]++;
         } else {
             occurences[placeholders[i]] = 1;
             var p = placeholders[i].slice(1, -1); // strip curlies
             //debug("wb2ha: {} p={}", placeholders[i], p);
-
-            if (control.var[p]) {// if present in vars as is
-
-                replacements[placeholders[i]] = control.var[p];
-
+            var ret = _returnValue(placeholders[i], control, device);
+            if (ret === undefined) {
+                replacements[placeholders[i]] = placeholders[i]; // retain
             } else {
-                var variable = p.slice(0, placeholders[i].indexOf(".") - 1);
-                var obj;
-                //debug("{} p={} variable={}", placeholders[i], p, variable);
-                var retain = false;
-                switch (variable) {
-                    case "device":
-                        obj = device;
-                        break;
-                    case "control":
-                        obj = control;
-                        break;
-                    case "config":
-                        obj = cfg;
-                        break;
-                    case "list":
-                        obj = list;
-                        break;
-                    case "devices":
-                        obj = devices;
-                        break;
-                    default:
-                        replacements[placeholders[i]] = placeholders[i]; // retain
-                        retain = true;
-                        break;  // ?
-                }
-                if (!retain) {
-                    replacements[placeholders[i]] =
-                            _poorMansRetriever(obj, p.slice(variable.length + 1));
-                }
+                replacements[placeholders[i]] = ret;
             }
             //debug("made {} for {}", replacements[placeholders[i]], placeholders[i]);
         }
@@ -479,7 +546,7 @@ function _poorMansTemplater(control, device) {
     // now replace all placeholders with those values
     //debug("replacements: {}", JSON.stringify(replacements));
     for (var p in replacements) {
-        //debug("replacing p {} with {}", p, replacements[p]);
+        //debug("replacing p {} with {} {} times", p, replacements[p], occurences[p]);
         for (var i = 0; i < occurences[p]; i++) { // no replaceAll method :(
             str = str.replace(p, replacements[p]);
         }

@@ -1,27 +1,21 @@
 {
     "only": [
-        "house_power",
-        "out_sensor",
-        "system/Current uptime",
-        "fl2_north_bedroom_sensor",
-        "fl1_hall_sensor",
-        "wb-led_32",
-        "fl1_living_sensor"
+        "wb-w1"
     ],
 
-    "exclude": [
-        "system/DTS Version",
-        "hwmon"
-    ],
+    "modify": {
+        "fl2_hallway_thermostat/setPoint": "thermostat",
+        "fl1_boiler_shutter/targetPosition": "rollshutter"
+    },
 
     "namedModifiers": {
         "wbLedLight": {
+            "type": "light",
             "mod": {
                 "brightness_state_topic": "/devices/{device.id}/controls/{control.id} Brightness",
                 "brightness_command_topic": "/devices/{device.id}/controls/{control.id} Brightness/on",
                 "brightness_scale": 100
-            },
-            "type": "light"
+            }
         },
         "thermostat": {
             "type": "climate",
@@ -55,6 +49,21 @@
                 "action_template": "{{ 'heating' if value == '1' else 'idle' }}"
             }
         },
+        "rollshutter": {
+            "type": "cover",
+            "mod": {
+                "device_class": "shutter" ,
+                "state_topic": "/devices/{device.id}/controls/state",
+                "state_stopped": "stopped",
+                "position_topic": "/devices/{device.id}/controls/position",
+                "set_position_topic": "/devices/{device.id}/controls/targetPosition/on",
+                "payload_close": "{control.meta.min}",
+                "payload_open": "{control.meta.max}",
+                "position_closed": "{control.meta.min}",
+                "position_open": "{control.meta.max}",
+                "command_topic": "/devices/{device.id}/controls/targetPosition/on"
+            }
+        },
         "zigbeeSwitchLight": {
             "type": "light",
             "mod": {
@@ -67,6 +76,18 @@
                 "payload_off": "OFF",
                 "payload_on": "ON",
                 "command_topic": "zigbee2mqtt/{device.id}/{path}/set"
+            }
+        },
+        "zigbeeSwitchLightLeft": {
+            "namedModifiers": ["zigbeeSwitchLight"],
+            "mod": {
+                "command_topic": "zigbee2mqtt/{device.id}/left/set"
+            }
+        },
+        "zigbeeSwitchLightRight": {
+            "namedModifiers": ["zigbeeSwitchLight"],
+            "mod": {
+                "command_topic": "zigbee2mqtt/{device.id}/right/set"
             }
         },
         "zigbeeSwitchFan": {
@@ -83,86 +104,6 @@
                 "command_topic": "zigbee2mqtt/{device.id}/set",
                 "command_template": "{\"{control.id}\": \"{{ value }}\"}"
             }
-        }
-    },
-
-    "modify": {
-
-        "fl2_north_toilet_light_fan": {
-            "state_left": {
-                "namedModifiers": [
-                    "zigbeeSwitchFan"
-                ]
-            },
-            "state_right": {
-                "namedModifiers": [
-                    "zigbeeSwitchLight"
-                ],
-                "var": {
-                    "path": "right"
-                }
-            }
-        },
-        "fl1_boiler_toilet_light": {
-            "state_left": {
-                "namedModifiers": [
-                    "zigbeeSwitchLight"
-                ],
-                "var": {
-                    "path": "left"
-                }
-            },
-            "state_right": {
-                "namedModifiers": [
-                    "zigbeeSwitchLight"
-                ],
-                "var": {
-                    "path": "right"
-                }
-            }
-        },
-        "wb-led_32": {
-            "Channel 4": {
-                "namedModifiers": [
-                    "wbLedLight"
-                ]
-            }
-        },
-        "house_stairs_led": {
-            "Channels 1_2_3_4": {
-                "namedModifiers": [
-                    "wbLedLight"
-                ]
-            }
-        },
-        "fl2_south_toilet_thermostat": {
-            "setPoint": {
-                "namedModifiers": [
-                    "thermostat"
-                ]
-            }
-        },
-        "fl1_living_thermostat": {
-            "setPoint": {
-                "namedModifiers": [
-                    "thermostat"
-                ]
-            }
-        },
-        "fl1_hall_sensor": {
-            "Max Motion": {},
-            "Current Motion": {}
-        },
-        "fl2_south_bedroom_sensor": {
-            "Temperature": {},
-            "Humidity": {},
-            "CO2": {},
-            "Air Quality (VOC)": {},
-            "Sound Level": {},
-            "Illuminance": {},
-            "Max Motion": {},
-            "Current Motion": {},
-            "Buzzer": {}
         }
     }
 }
