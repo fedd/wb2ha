@@ -14,7 +14,7 @@
         "hwmon"
     ],
 
-    "mods": {
+    "namedModifiers": {
         "wbLedLight": {
             "mod": {
                 "brightness_state_topic": "/devices/{device.id}/controls/{control.id} Brightness",
@@ -90,12 +90,12 @@
 
         "fl2_north_toilet_light_fan": {
             "state_left": {
-                "mods": [
+                "namedModifiers": [
                     "zigbeeSwitchFan"
                 ]
             },
             "state_right": {
-                "mods": [
+                "namedModifiers": [
                     "zigbeeSwitchLight"
                 ],
                 "var": {
@@ -105,7 +105,7 @@
         },
         "fl1_boiler_toilet_light": {
             "state_left": {
-                "mods": [
+                "namedModifiers": [
                     "zigbeeSwitchLight"
                 ],
                 "var": {
@@ -113,7 +113,7 @@
                 }
             },
             "state_right": {
-                "mods": [
+                "namedModifiers": [
                     "zigbeeSwitchLight"
                 ],
                 "var": {
@@ -123,28 +123,28 @@
         },
         "wb-led_32": {
             "Channel 4": {
-                "mods": [
+                "namedModifiers": [
                     "wbLedLight"
                 ]
             }
         },
         "house_stairs_led": {
             "Channels 1_2_3_4": {
-                "mods": [
+                "namedModifiers": [
                     "wbLedLight"
                 ]
             }
         },
         "fl2_south_toilet_thermostat": {
             "setPoint": {
-                "mods": [
+                "namedModifiers": [
                     "thermostat"
                 ]
             }
         },
         "fl1_living_thermostat": {
             "setPoint": {
-                "mods": [
+                "namedModifiers": [
                     "thermostat"
                 ]
             }

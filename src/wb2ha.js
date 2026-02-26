@@ -1,3 +1,5 @@
+/* global log */
+
 // Convert Wirenboard metas to Home Assistant MQTT Discovery configs.
 // A Wirenboard rule.
 // Author: fedd@vsetec.com
@@ -129,7 +131,7 @@ function _process(deviceId, controlId) {
             mods[controlId] = mods;
         }
     }
-    mods = mods.mods ? mods.mods : null; // modifier names for our control, may be omitted
+    mods = mods.namedModifiers ? mods.namedModifiers : null; // modifier names for our control, may be omitted
 
     // collect all modifiers into one modifier object
     // initialise it with common values
@@ -185,22 +187,22 @@ function _process(deviceId, controlId) {
     // deduce mods from units of measurement
     if (control.meta.units) {
         control.discovery.unit_of_measurement = control.meta.units;
-        _copyTypeModRW(control, control.discovery, cfg.units[control.meta.units]);
+        _copyTypeModRW(control, cfg.units[control.meta.units]);
     }
     // deduce mods from type
     if (control.meta.type) {
-        _copyTypeModRW(control, control.discovery, cfg.controlTypes[control.meta.type]);
+        _copyTypeModRW(control, cfg.controlTypes[control.meta.type]);
     }
 
-    // take modifiers from class mods
+    // take modifiers from named mods
     if (mods) {
         for (var mod in mods) {
-            _copyTypeModRW(control, control.discovery, list.mods[mods[mod]]);
+            _copyTypeModRW(control, list.namedModifiers[mods[mod]]);
         }
     }
 
     // lastly, take our own mod which will overwrite everything
-    _copyTypeModRW(control, control.discovery, list.modify[deviceId][controlId]);
+    _copyTypeModRW(control, list.modify[deviceId][controlId]);
 
     // enum options
     if (control.meta.enum) {
@@ -263,10 +265,76 @@ setInterval(function () {
     }
 }, 1000 * 30);  // rerun the config file watcher
 
+function _stringOrArrayToMods(obj) {
+    if (typeof obj === 'string' || obj instanceof String) {
+        return {
+            namedModifiers: [obj]
+        };
+    }
+    if (typeof obj === 'array' || obj instanceof Array) {
+        return {
+            namedModifiers: obj
+        };
+    }
+    return obj;
+}
+
 function _loadConfig() {
     allControls = {};
     cfg = readConfig(CONFIGFILENAME);
     list = readConfig(LISTFILENAME);
+
+    if (!list.modify) {
+        list.modify = {};
+    }
+
+    var toAdd = {};
+    var toDelete = [];
+    // unwrap modified device list
+    for (var i in list.modify) {
+        var splitted = i.split("/");
+
+        if (splitted.length === 2) { // "device/control" notation
+            toDelete.push(i);
+            // transform the bare string or array
+            list.modify[i] = _stringOrArrayToMods(list.modify[i]);
+
+            toAdd[splitted[0]] = list.modify[splitted[0]];
+            if (toAdd[splitted[0]]) {// we have such a device
+                if (toAdd[splitted[0]][splitted[1]]) { // and even control
+                    // transform a possible string
+                    toAdd[splitted[0]][splitted[1]] = _stringOrArrayToMods(toAdd[splitted[0]][splitted[1]]);
+                    // merge what we have with what we had
+                    _copyTypeMod(toAdd[splitted[0]][splitted[1]], toAdd[splitted[0]][splitted[1]].mod, list.modify[i], true);
+                } else {
+                    // there wasn't anything. put what we have
+                    toAdd[splitted[0]][splitted[1]] = list.modify[i];
+                }
+            } else { // we have no such device, create
+                toAdd[splitted[0]] = {};
+                // and put what we have there
+                toAdd[splitted[0]][splitted[1]] = list.modify[i];
+            }
+        } else if (splitted.length > 2) {
+            log.error("wb2ha: wrong \"modify\" entry: {}", i);
+        }
+    }
+
+    // now delete the todeletes
+    for (var i in toDelete) {
+        delete list.modify[toDelete[i]];
+    }
+    // now add the toadds
+    for (var i in toAdd) {
+        list.modify[i] = toAdd[i];
+    }
+    // now walk through for the last time and convert strings to arrays
+    for (var i in list.modify) {
+        for (var j in list.modify[i]) {
+            list.modify[i][j] = _stringOrArrayToMods(list.modify[i][j]);
+        }
+    }
+
     // rework includeds
     if (list.only) {
         for (var i in list.only) {
@@ -279,7 +347,7 @@ function _loadConfig() {
                 }
             } else { // only select controls. just add to mods.
                 if (splitted.length !== 2) {
-                    log("wb2ha: wrong include: {}", list.only[i]);
+                    log.error("wb2ha: wrong \"only\" entry: {}", list.only[i]);
                 } else {
                     if (!list.modify[splitted[0]]) {
                         list.modify[splitted[0]] = {};
@@ -293,13 +361,24 @@ function _loadConfig() {
     }
 }
 
-function _copyTypeMod(control, mod, src) {
+function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
     if (src.type) {
-        control.type = src.type;
+        dest.type = src.type;
     }
     if (src.var) {
+        if (!dest.var) {
+            dest.var = {};
+        }
         for (var mi in src.var) {
-            control.var[mi] = src.var[mi];
+            dest.var[mi] = src.var[mi];
+        }
+    }
+    if (includeNamedModifiers && src.namedModifiers) {
+        if (!dest.namedModifiers) {
+            dest.namedModifiers = [];
+        }
+        for (var mi in src.namedModifiers) {
+            dest.namedModifiers.push(src.namedModifiers[mi]);
         }
     }
     if (src.mod) {
@@ -316,16 +395,17 @@ function _copyTypeMod(control, mod, src) {
     }
 }
 
-function _copyTypeModRW(control, mod, src) {
+function _copyTypeModRW(control, src) {
+    var mod = control.discovery;
     if (src) {
         _copyTypeMod(control, mod, src);
         if (control.meta.readonly) {
             if (src.readonly) {
-                _copyTypeMod(control, mod, src.readonly);
+                _copyTypeMod(control, mod, src.readonly, false);
             }
         } else {
             if (src.writable) {
-                _copyTypeMod(control, mod, src.writable);
+                _copyTypeMod(control, mod, src.writable, false);
             }
         }
     }
