@@ -248,28 +248,35 @@ setInterval(function () {
         inotifyIsWorking = true;
         runShellCommand("inotifywait -e modify " + CONFIGFILENAME + " " + LISTFILENAME, {
             exitCallback: function () {
-                inotifyIsWorking = false;
-                log("wb2ha: config changed");
 
-                _loadConfig();
+                setTimeout(function () {
+                    log("wb2ha: config changed");
 
-                for (var deviceId in devices) { // devices are kept updated by trackMqtt
-                    devices[deviceId].skipped = false;
-                    for (var controlId in devices[deviceId].controls) {
-                        if (devices[deviceId].controls[controlId].topic) {
-                            log("wb2ha: UNpublishing control {} from {} before reprocessing", controlId,
-                                    devices[deviceId].controls[controlId].topic);
-                            publish(devices[deviceId].controls[controlId].topic, "", 2, true);
+                    _loadConfig();
+
+                    for (var deviceId in devices) { // devices are kept updated by trackMqtt
+                        devices[deviceId].skipped = false;
+                        for (var controlId in devices[deviceId].controls) {
+                            if (devices[deviceId].controls[controlId].topic) {
+                                log("wb2ha: UNpublishing control {} from {} before reprocessing", controlId,
+                                        devices[deviceId].controls[controlId].topic);
+                                publish(devices[deviceId].controls[controlId].topic, "", 2, true);
+                                delete devices[deviceId].controls[controlId].topic;
+                            }
+                            // prepare to reprocess
+                            devices[deviceId].controls[controlId].processed = false;
+                            devices[deviceId].controls[controlId].skipped = false;
+                            delete devices[deviceId].controls[controlId].type;
+
+                            // reprocess
+                            _process(deviceId, controlId);
                         }
-                        // prepare to reprocess
-                        devices[deviceId].controls[controlId].processed = false;
-                        devices[deviceId].controls[controlId].skipped = false;
-                        delete devices[deviceId].controls[controlId].type;
-
-                        // reprocess
-                        _process(deviceId, controlId);
                     }
-                }
+
+                    inotifyIsWorking = false; // resdtart listening
+
+                }, 1000 * 2); // wait a sec
+
             }
         });
     }

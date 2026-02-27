@@ -1,4 +1,5 @@
 {
+
     "only": [
         "wb-w1"
     ],
@@ -42,8 +43,6 @@
                 ],
                 "mode_state_topic": "/devices/{device.id}/controls/mode",
                 "mode_state_template": "{{ 'off' if value == 'off' else 'heat' }}",
-                "mode_command_topic": "/devices/{device.id}/controls/mode/on",
-                "mode_command_template": "{{ 'off' if value == 'off' else 'on' }}",
 
                 "action_topic": "/devices/{device.id}/controls/state",
                 "action_template": "{{ 'heating' if value == '1' else 'idle' }}"
@@ -52,15 +51,16 @@
         "rollshutter": {
             "type": "cover",
             "mod": {
-                "device_class": "shutter" ,
+                "device_class": "shutter",
                 "state_topic": "/devices/{device.id}/controls/state",
                 "state_stopped": "stopped",
-                "position_topic": "/devices/{device.id}/controls/position",
+                "position_topic": "/devices/{device.id}/controls/targetPosition",
                 "set_position_topic": "/devices/{device.id}/controls/targetPosition/on",
                 "payload_close": "{control.meta.min}",
                 "payload_open": "{control.meta.max}",
                 "position_closed": "{control.meta.min}",
                 "position_open": "{control.meta.max}",
+                "payload_stop": null,
                 "command_topic": "/devices/{device.id}/controls/targetPosition/on"
             }
         },
