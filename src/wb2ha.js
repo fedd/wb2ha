@@ -183,7 +183,7 @@ function _process(deviceId, controlId) {
     // initialise it with common values
     control.discovery = {
         device: {
-            identifiers: [device.idSmall, deviceId],
+            identifiers: [device.idSmall + "_" + cfg.wbId],
             manufacturer: "WirenBoard",
             name: deviceId
         },
@@ -212,7 +212,7 @@ function _process(deviceId, controlId) {
             }],
         state_topic: "/devices/" + deviceId + "/controls/" + controlId,
         name: controlId,
-        unique_id: device.idSmall + "_" + control.idSmall
+        unique_id: device.idSmall + "_" + cfg.wbId + "_" + control.idSmall
 //        object_id: device.idSmall + "_" + control.idSmall, // deprecated
     };
 
@@ -255,12 +255,13 @@ function _process(deviceId, controlId) {
     }
 
     // replace the deprecated "object_id"
-    control.discovery.default_entity_id = control.type + "." + device.idSmall + "_" + control.idSmall;
+    control.discovery.default_entity_id = control.type + "." +
+            control.discovery.unique_id;
 
     control.topic =
             cfg.haroot + "/" +
             control.type + "/" +
-            cfg.node + "/" +
+            cfg.node + cfg.wbId + "/" +
             device.idSmall + "_" +
             control.idSmall + "/config";
 
@@ -594,278 +595,291 @@ runShellCommand("test -f " + CONFIGFILENAME, {
         if (exitCode === 0) {
             _createListAndRun();
         } else {
-            // create default config
-            spawn("tee", ["-a", CONFIGFILENAME], {
 
-                //default config. basic WB types and units
-                input: JSON.stringify({
+            spawn("cat", ["/var/lib/wirenboard/short_sn.conf"], {
+                captureOutput: true,
+                exitCallback: function exitCallback(exitCode, output) {
+                    if (exitCode !== 0) {
+                        log.error("wb2ha: no shortSN in /var/lib/wirenboard/short_sn.conf");
+                    } else {
+                        var shortSn = output.trim();
+                        // create default config
+                        spawn("tee", ["-a", CONFIGFILENAME], {
 
-                    "haroot": "homeassistant",
-                    "node": "w2h",
+                            //default config. basic WB types and units
+                            input: JSON.stringify({
 
-                    "controlTypes": {
-                        "sound_level": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            },
-                            "mod": {
-                                "device_class": "sound_pressure",
-                                "unit_of_measurement": "dB"
-                            }
-                        },
-                        "concentration": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            },
-                            "mod": {
-                                "device_class": "carbon_dioxide",
-                                "unit_of_measurement": "ppm"
-                            }
-                        },
-                        "rel_humidity": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            },
-                            "mod": {
-                                "device_class": "humidity",
-                                "unit_of_measurement": "%"
-                            }
-                        },
-                        "voltage": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            },
-                            "mod": {
-                                "device_class": "voltage",
-                                "unit_of_measurement": "V"
-                            }
-                        },
-                        "lux": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            },
-                            "mod": {
-                                "device_class": "illuminance",
-                                "unit_of_measurement": "lx"
-                            }
-                        },
-                        "temperature": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            },
-                            "mod": {
-                                "device_class": "temperature",
-                                "unit_of_measurement": "\u00b0C"
-                            }
-                        },
+                                "haroot": "homeassistant",
+                                "node": "w2h",
+                                "wbId": shortSn,
 
-                        "range": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "slider"
-                                }
-                            }
-                        },
-                        "value": {
-                            "readonly": {
-                                "type": "sensor",
-                                "ifUnset": {
-                                    "unit_of_measurement": "%"
-                                }
-                            },
-                            "writable": {
-                                "type": "number",
-                                "mod": {
-                                    "mode": "box"
-                                }
-                            }
-                        },
-                        "switch": {
-                            "readonly": {
-                                "type": "binary_sensor"
-                            },
-                            "writable": {
-                                "type": "switch"
-                            },
-                            "mod": {
-                                "payload_on": 1,
-                                "payload_off": 0
-                            }
-                        },
-                        "alarm": {
-                            "readonly": {
-                                "type": "binary_sensor"
-                            },
-                            "writable": {
-                                "type": "switch"
-                            },
-                            "mod": {
-                                "device_class": "problem",
-                                "payload_on": 1,
-                                "payload_off": 0
-                            }
-                        },
-                        "text": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "text",
-                                "mod": {
-                                    "platform": "text"
-                                }
-                            }
-                        },
-                        "w1-id": {
-                            "readonly": {
-                                "type": "sensor"
-                            },
-                            "writable": {
-                                "type": "text",
-                                "mod": {
-                                    "platform": "text"
-                                }
-                            }
-                        },
-                        "rgb": {
-                            "type": "light",
-                            "mod": {
-                                "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
-                                "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
-                                "rgb_value_template": "{{ value.split(';') | join(',') }}",
-                                "rgb_command_template": "{{ red }};{{ green }};{{ blue }}",
+                                "controlTypes": {
+                                    "sound_level": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        },
+                                        "mod": {
+                                            "device_class": "sound_pressure",
+                                            "unit_of_measurement": "dB"
+                                        }
+                                    },
+                                    "concentration": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        },
+                                        "mod": {
+                                            "device_class": "carbon_dioxide",
+                                            "unit_of_measurement": "ppm"
+                                        }
+                                    },
+                                    "rel_humidity": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        },
+                                        "mod": {
+                                            "device_class": "humidity",
+                                            "unit_of_measurement": "%"
+                                        }
+                                    },
+                                    "voltage": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        },
+                                        "mod": {
+                                            "device_class": "voltage",
+                                            "unit_of_measurement": "V"
+                                        }
+                                    },
+                                    "lux": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        },
+                                        "mod": {
+                                            "device_class": "illuminance",
+                                            "unit_of_measurement": "lx"
+                                        }
+                                    },
+                                    "temperature": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        },
+                                        "mod": {
+                                            "device_class": "temperature",
+                                            "unit_of_measurement": "\u00b0C"
+                                        }
+                                    },
 
-                                "state_topic": "/devices/{device.id}/controls/RGB Strip",
-                                "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
-                                "payload_on": 1,
-                                "payload_off": 0
-                            }
-                        },
-                        "pushbutton": {
-                            "type": "button",
-                            "mod": {
-                                "payload_press": 1
-                            }
-                        }
-                    },
+                                    "range": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "slider"
+                                            }
+                                        }
+                                    },
+                                    "value": {
+                                        "readonly": {
+                                            "type": "sensor",
+                                            "ifUnset": {
+                                                "unit_of_measurement": "%"
+                                            }
+                                        },
+                                        "writable": {
+                                            "type": "number",
+                                            "mod": {
+                                                "mode": "box"
+                                            }
+                                        }
+                                    },
+                                    "switch": {
+                                        "readonly": {
+                                            "type": "binary_sensor"
+                                        },
+                                        "writable": {
+                                            "type": "switch"
+                                        },
+                                        "mod": {
+                                            "payload_on": 1,
+                                            "payload_off": 0
+                                        }
+                                    },
+                                    "alarm": {
+                                        "readonly": {
+                                            "type": "binary_sensor"
+                                        },
+                                        "writable": {
+                                            "type": "switch"
+                                        },
+                                        "mod": {
+                                            "device_class": "problem",
+                                            "payload_on": 1,
+                                            "payload_off": 0
+                                        }
+                                    },
+                                    "text": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "text",
+                                            "mod": {
+                                                "platform": "text"
+                                            }
+                                        }
+                                    },
+                                    "w1-id": {
+                                        "readonly": {
+                                            "type": "sensor"
+                                        },
+                                        "writable": {
+                                            "type": "text",
+                                            "mod": {
+                                                "platform": "text"
+                                            }
+                                        }
+                                    },
+                                    "rgb": {
+                                        "type": "light",
+                                        "mod": {
+                                            "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
+                                            "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                                            "rgb_value_template": "{{ value.split(';') | join(',') }}",
+                                            "rgb_command_template": "{{ red }};{{ green }};{{ blue }}",
 
-                    "units": {
-                        "ppb": {
-                            "mod": {
-                                "device_class": "volatile_organic_compounds_parts",
-                                "unit_of_measurement": "ppb"
+                                            "state_topic": "/devices/{device.id}/controls/RGB Strip",
+                                            "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
+                                            "payload_on": 1,
+                                            "payload_off": 0
+                                        }
+                                    },
+                                    "pushbutton": {
+                                        "type": "button",
+                                        "mod": {
+                                            "payload_press": 1
+                                        }
+                                    }
+                                },
+
+                                "units": {
+                                    "ppb": {
+                                        "mod": {
+                                            "device_class": "volatile_organic_compounds_parts",
+                                            "unit_of_measurement": "ppb"
+                                        }
+                                    },
+                                    "₽": {
+                                        "writable": {
+                                            "step": 0.01
+                                        },
+                                        "mod": {
+                                            "device_class": "monetary",
+                                            "unit_of_measurement": "RUR"
+                                        }
+                                    },
+                                    "%, RH": {
+                                        "mod": {
+                                            "device_class": "humidity",
+                                            "unit_of_measurement": "%"
+                                        }
+                                    },
+                                    "mbar": {
+                                        "mod": {
+                                            "device_class": "pressure"
+                                        }
+                                    },
+                                    "bar": {
+                                        "mod": {
+                                            "device_class": "pressure"
+                                        }
+                                    },
+                                    "deg C": {
+                                        "mod": {
+                                            "device_class": "temperature",
+                                            "unit_of_measurement": "\u00b0C"
+                                        }
+                                    },
+                                    "V": {
+                                        "mod": {
+                                            "device_class": "voltage"
+                                        }
+                                    },
+                                    "W": {
+                                        "mod": {
+                                            "device_class": "power"
+                                        }
+                                    },
+                                    "kWh": {
+                                        "mod": {
+                                            "device_class": "energy"
+                                        }
+                                    },
+                                    "Hz": {
+                                        "mod": {
+                                            "device_class": "frequency"
+                                        }
+                                    },
+                                    "s": {
+                                        "mod": {
+                                            "device_class": "duration"
+                                        }
+                                    },
+                                    "ms": {
+                                        "mod": {
+                                            "device_class": "duration"
+                                        }
+                                    }
+                                }
+
+                            }, null, 4),
+                            exitCallback: function () {
+                                log.warning("wb2ha: created config file {}", CONFIGFILENAME);
+                                _createListAndRun();
                             }
-                        },
-                        "₽": {
-                            "writable": {
-                                "step": 0.01
-                            },
-                            "mod": {
-                                "device_class": "monetary",
-                                "unit_of_measurement": "RUR"
-                            }
-                        },
-                        "%, RH": {
-                            "mod": {
-                                "device_class": "humidity",
-                                "unit_of_measurement": "%"
-                            }
-                        },
-                        "mbar": {
-                            "mod": {
-                                "device_class": "pressure"
-                            }
-                        },
-                        "bar": {
-                            "mod": {
-                                "device_class": "pressure"
-                            }
-                        },
-                        "deg C": {
-                            "mod": {
-                                "device_class": "temperature",
-                                "unit_of_measurement": "\u00b0C"
-                            }
-                        },
-                        "V": {
-                            "mod": {
-                                "device_class": "voltage"
-                            }
-                        },
-                        "W": {
-                            "mod": {
-                                "device_class": "power"
-                            }
-                        },
-                        "kWh": {
-                            "mod": {
-                                "device_class": "energy"
-                            }
-                        },
-                        "Hz": {
-                            "mod": {
-                                "device_class": "frequency"
-                            }
-                        },
-                        "s": {
-                            "mod": {
-                                "device_class": "duration"
-                            }
-                        },
-                        "ms": {
-                            "mod": {
-                                "device_class": "duration"
-                            }
-                        }
+                        });
                     }
-
-                }, null, 4),
-                exitCallback: function () {
-                    log.warning("wb2ha: created config file {}", CONFIGFILENAME);
-                    _createListAndRun();
                 }
             });
         }
+
     }
 });
 
