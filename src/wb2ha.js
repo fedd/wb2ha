@@ -13,76 +13,120 @@ var cfg;
 var list;
 var allControls;
 var devices = {};
-var inotifyIsWorking = false;
 
-_loadConfig();
+function _startTracking() {
 
-// track devices
-trackMqtt("/devices/+/meta", function (message) {
-    var stripped = message.topic.slice("/devices/".length);
-    var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
+    _loadConfig();
 
-    if (message.value.length === 0) {
-        return;
-    }
+    var inotifyIsWorking = false;
+    // track config files change
+    setInterval(function () {
+        if (!inotifyIsWorking) {
+            inotifyIsWorking = true;
+            runShellCommand("inotifywait -e modify " + CONFIGFILENAME + " " + LISTFILENAME, {
+                exitCallback: function () {
 
-    if (!devices[deviceId]) {
-        devices[deviceId] = {
-            id: deviceId,
-            idSmall: deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
-            controls: {}
-        };
-    }
+                    setTimeout(function () {
+                        log.warning("wb2ha: config changed");
 
-    devices[deviceId].meta = JSON.parse(message.value);
+                        _loadConfig();
 
-    // process the devices found so far
-    for (var controlId in devices[deviceId].controls) {
-        _process(deviceId, controlId);
-    }
-});
+                        for (var deviceId in devices) { // devices are kept updated by trackMqtt
+                            devices[deviceId].skipped = false;
+                            for (var controlId in devices[deviceId].controls) {
+                                if (devices[deviceId].controls[controlId].topic) {
+                                    log("wb2ha: UNpublishing control {} from {} before reprocessing", controlId,
+                                            devices[deviceId].controls[controlId].topic);
+                                    publish(devices[deviceId].controls[controlId].topic, "", 2, true);
+                                    delete devices[deviceId].controls[controlId].topic;
+                                }
+                                // prepare to reprocess
+                                devices[deviceId].controls[controlId].processed = false;
+                                devices[deviceId].controls[controlId].skipped = false;
+                                delete devices[deviceId].controls[controlId].type;
 
-// track controls
-trackMqtt("/devices/+/controls/+/meta", function (message) {
-    var stripped = message.topic.slice("/devices/".length);
-    var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
-    stripped = stripped.slice(deviceId.length + "/controls/".length);
-    var controlId = stripped.slice(stripped, stripped.indexOf("/"));
+                                // reprocess
+                                _process(deviceId, controlId);
+                            }
+                        }
 
-    if (message.value.length === 0) {
-        if (devices[deviceId] && devices[deviceId].controls[controlId]) {
-            if (devices[deviceId].controls[controlId].topic) {
-                log("wb2ha: UNpublishing control {} from {}", controlId,
-                        devices[deviceId].controls[controlId].topic);
-                publish(devices[deviceId].controls[controlId].topic, "", 2, true);
-            }
-            devices[deviceId].controls[controlId].processed = true;
+                        inotifyIsWorking = false; // restart listening
+
+                    }, 1000 * 2); // wait a sec
+
+                }
+            });
         }
-        return;
-    }
+    }, 1000 * 30);  // rerun the config file watcher
 
-    if (!devices[deviceId]) {
-        devices[deviceId] = {
-            id: deviceId,
-            idSmall: deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
-            controls: {}
+    // track devices
+    trackMqtt("/devices/+/meta", function (message) {
+        var stripped = message.topic.slice("/devices/".length);
+        var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
+
+        if (message.value.length === 0) {
+            return;
+        }
+
+        if (!devices[deviceId]) {
+            devices[deviceId] = {
+                id: deviceId,
+                idSmall: deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
+                controls: {}
+            };
+        }
+
+        devices[deviceId].meta = JSON.parse(message.value);
+
+        // process the devices found so far
+        for (var controlId in devices[deviceId].controls) {
+            _process(deviceId, controlId);
+        }
+    });
+
+    // track controls
+    trackMqtt("/devices/+/controls/+/meta", function (message) {
+        var stripped = message.topic.slice("/devices/".length);
+        var deviceId = stripped.slice(stripped, stripped.indexOf("/"));
+        stripped = stripped.slice(deviceId.length + "/controls/".length);
+        var controlId = stripped.slice(stripped, stripped.indexOf("/"));
+
+        if (message.value.length === 0) {
+            if (devices[deviceId] && devices[deviceId].controls[controlId]) {
+                if (devices[deviceId].controls[controlId].topic) {
+                    log("wb2ha: UNpublishing control {} from {}", controlId,
+                            devices[deviceId].controls[controlId].topic);
+                    publish(devices[deviceId].controls[controlId].topic, "", 2, true);
+                }
+                devices[deviceId].controls[controlId].processed = true;
+            }
+            return;
+        }
+
+        if (!devices[deviceId]) {
+            devices[deviceId] = {
+                id: deviceId,
+                idSmall: deviceId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
+                controls: {}
+            };
+        }
+
+        devices[deviceId].controls[controlId] = {
+            id: controlId,
+            idSmall: controlId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
+            deviceId: deviceId,
+            meta: JSON.parse(message.value),
+            "var": {},
+            processed: false
         };
-    }
 
-    devices[deviceId].controls[controlId] = {
-        id: controlId,
-        idSmall: controlId.replace(/[^A-Za-z0-9-]/g, "_").toLowerCase(),
-        deviceId: deviceId,
-        meta: JSON.parse(message.value),
-        "var": {},
-        processed: false
-    };
+        // have encountered a device
+        if (devices[deviceId].meta) {
+            _process(deviceId, controlId);
+        }
+    });
 
-    // havent encountered a device yet
-    if (devices[deviceId].meta) {
-        _process(deviceId, controlId);
-    }
-});
+}
 
 function _process(deviceId, controlId) {
 
@@ -196,18 +240,7 @@ function _process(deviceId, controlId) {
         _copyTypeModRW(control, cfg.controlTypes[control.meta.type]);
     }
 
-    // take modifiers from named mods
-//    if (entry) {
-//        var collectedNamedModifiers = {};
-//        for (var mod in entry) {
-//            if (!collectedNamedModifiers[entry[mod]]) {
-//                collectedNamedModifiers[entry[mod]] = true;
-//                _copyTypeModRW(control, list.namedModifiers[entry[mod]], collectedNamedModifiers);
-//            }
-//        }
-//    }
-
-    // lastly, take our own mod which will overwrite everything
+    // lastly, take our named mods and then our own mod which will overwrite everything
     _copyTypeModRW(control, list.modify[deviceId][controlId], {});
 
     // enum options
@@ -243,45 +276,6 @@ function _process(deviceId, controlId) {
 
 }
 
-setInterval(function () {
-    if (!inotifyIsWorking) {
-        inotifyIsWorking = true;
-        runShellCommand("inotifywait -e modify " + CONFIGFILENAME + " " + LISTFILENAME, {
-            exitCallback: function () {
-
-                setTimeout(function () {
-                    log("wb2ha: config changed");
-
-                    _loadConfig();
-
-                    for (var deviceId in devices) { // devices are kept updated by trackMqtt
-                        devices[deviceId].skipped = false;
-                        for (var controlId in devices[deviceId].controls) {
-                            if (devices[deviceId].controls[controlId].topic) {
-                                log("wb2ha: UNpublishing control {} from {} before reprocessing", controlId,
-                                        devices[deviceId].controls[controlId].topic);
-                                publish(devices[deviceId].controls[controlId].topic, "", 2, true);
-                                delete devices[deviceId].controls[controlId].topic;
-                            }
-                            // prepare to reprocess
-                            devices[deviceId].controls[controlId].processed = false;
-                            devices[deviceId].controls[controlId].skipped = false;
-                            delete devices[deviceId].controls[controlId].type;
-
-                            // reprocess
-                            _process(deviceId, controlId);
-                        }
-                    }
-
-                    inotifyIsWorking = false; // resdtart listening
-
-                }, 1000 * 2); // wait a sec
-
-            }
-        });
-    }
-}, 1000 * 30);  // rerun the config file watcher
-
 function _stringOrArrayToMods(obj) {
     if (typeof obj === 'string' || obj instanceof String) {
         return {
@@ -299,6 +293,7 @@ function _stringOrArrayToMods(obj) {
 function _loadConfig() {
     allControls = {};
     cfg = readConfig(CONFIGFILENAME);
+    log("wb2ha: loaded config file {}", CONFIGFILENAME);
     list = readConfig(LISTFILENAME);
 
     if (!list.modify) {
@@ -385,6 +380,8 @@ function _loadConfig() {
             }
         }
     }
+
+    log("wb2ha: loaded list file {}", LISTFILENAME);
 }
 
 function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
@@ -566,3 +563,309 @@ function _poorMansTemplater(control, device) {
         control.discovery[p] = str[p]; // no idea if es5 has anything wiser
     }
 }
+
+// create the list config file if absent, then run
+function _createListAndRun() {
+    runShellCommand("test -f " + LISTFILENAME, {
+        exitCallback: function (exitCode) {
+            if (exitCode === 0) {
+                _startTracking();
+            } else {
+                // create default list
+                spawn("tee", ["-a", LISTFILENAME], {
+                    input: JSON.stringify({
+                        only: ["system"],
+                        modify: {},
+                        namedModifiers: {}
+                    }, null, 4),
+                    exitCallback: function () {
+                        log.warning("wb2ha: created empty list file {}", LISTFILENAME);
+                        setTimeout(_startTracking, 1000 * 2); // wait a sec, then start the main process
+                    }
+                });
+            }
+        }
+    });
+}
+
+// creating the main config file if it's absent, then run
+runShellCommand("test -f " + CONFIGFILENAME, {
+    exitCallback: function (exitCode) {
+        if (exitCode === 0) {
+            _createListAndRun();
+        } else {
+            // create default config
+            spawn("tee", ["-a", CONFIGFILENAME], {
+
+                //default config. basic WB types and units
+                input: JSON.stringify({
+
+                    "haroot": "homeassistant",
+                    "node": "w2h",
+
+                    "controlTypes": {
+                        "sound_level": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            },
+                            "mod": {
+                                "device_class": "sound_pressure",
+                                "unit_of_measurement": "dB"
+                            }
+                        },
+                        "concentration": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            },
+                            "mod": {
+                                "device_class": "carbon_dioxide",
+                                "unit_of_measurement": "ppm"
+                            }
+                        },
+                        "rel_humidity": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            },
+                            "mod": {
+                                "device_class": "humidity",
+                                "unit_of_measurement": "%"
+                            }
+                        },
+                        "voltage": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            },
+                            "mod": {
+                                "device_class": "voltage",
+                                "unit_of_measurement": "V"
+                            }
+                        },
+                        "lux": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            },
+                            "mod": {
+                                "device_class": "illuminance",
+                                "unit_of_measurement": "lx"
+                            }
+                        },
+                        "temperature": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            },
+                            "mod": {
+                                "device_class": "temperature",
+                                "unit_of_measurement": "\u00b0C"
+                            }
+                        },
+
+                        "range": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "slider"
+                                }
+                            }
+                        },
+                        "value": {
+                            "readonly": {
+                                "type": "sensor",
+                                "ifUnset": {
+                                    "unit_of_measurement": "%"
+                                }
+                            },
+                            "writable": {
+                                "type": "number",
+                                "mod": {
+                                    "mode": "box"
+                                }
+                            }
+                        },
+                        "switch": {
+                            "readonly": {
+                                "type": "binary_sensor"
+                            },
+                            "writable": {
+                                "type": "switch"
+                            },
+                            "mod": {
+                                "payload_on": 1,
+                                "payload_off": 0
+                            }
+                        },
+                        "alarm": {
+                            "readonly": {
+                                "type": "binary_sensor"
+                            },
+                            "writable": {
+                                "type": "switch"
+                            },
+                            "mod": {
+                                "device_class": "problem",
+                                "payload_on": 1,
+                                "payload_off": 0
+                            }
+                        },
+                        "text": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "text",
+                                "mod": {
+                                    "platform": "text"
+                                }
+                            }
+                        },
+                        "w1-id": {
+                            "readonly": {
+                                "type": "sensor"
+                            },
+                            "writable": {
+                                "type": "text",
+                                "mod": {
+                                    "platform": "text"
+                                }
+                            }
+                        },
+                        "rgb": {
+                            "type": "light",
+                            "mod": {
+                                "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
+                                "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                                "rgb_value_template": "{{ value.split(';') | join(',') }}",
+                                "rgb_command_template": "{{ red }};{{ green }};{{ blue }}",
+
+                                "state_topic": "/devices/{device.id}/controls/RGB Strip",
+                                "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
+                                "payload_on": 1,
+                                "payload_off": 0
+                            }
+                        },
+                        "pushbutton": {
+                            "type": "button",
+                            "mod": {
+                                "payload_press": 1
+                            }
+                        }
+                    },
+
+                    "units": {
+                        "ppb": {
+                            "mod": {
+                                "device_class": "volatile_organic_compounds_parts",
+                                "unit_of_measurement": "ppb"
+                            }
+                        },
+                        "₽": {
+                            "writable": {
+                                "step": 0.01
+                            },
+                            "mod": {
+                                "device_class": "monetary",
+                                "unit_of_measurement": "RUR"
+                            }
+                        },
+                        "%, RH": {
+                            "mod": {
+                                "device_class": "humidity",
+                                "unit_of_measurement": "%"
+                            }
+                        },
+                        "mbar": {
+                            "mod": {
+                                "device_class": "pressure"
+                            }
+                        },
+                        "bar": {
+                            "mod": {
+                                "device_class": "pressure"
+                            }
+                        },
+                        "deg C": {
+                            "mod": {
+                                "device_class": "temperature",
+                                "unit_of_measurement": "\u00b0C"
+                            }
+                        },
+                        "V": {
+                            "mod": {
+                                "device_class": "voltage"
+                            }
+                        },
+                        "W": {
+                            "mod": {
+                                "device_class": "power"
+                            }
+                        },
+                        "kWh": {
+                            "mod": {
+                                "device_class": "energy"
+                            }
+                        },
+                        "Hz": {
+                            "mod": {
+                                "device_class": "frequency"
+                            }
+                        },
+                        "s": {
+                            "mod": {
+                                "device_class": "duration"
+                            }
+                        },
+                        "ms": {
+                            "mod": {
+                                "device_class": "duration"
+                            }
+                        }
+                    }
+
+                }, null, 4),
+                exitCallback: function () {
+                    log.warning("wb2ha: created config file {}", CONFIGFILENAME);
+                    _createListAndRun();
+                }
+            });
+        }
+    }
+});
+
