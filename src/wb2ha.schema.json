@@ -1,0 +1,597 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "wb2ha Configuration",
+    "description": "Configure WB devices to add to HA",
+    "type": "object",
+    "_format": "grid-strict",
+    "options": {
+        "show_opt_in_restore": true,
+        "disable_edit_json": false,
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "configFile": {
+        "path": "/etc/wb-rules/wb2ha.config"
+    },
+    "properties": {
+        "haroot": {
+            "propertyOrder": 1,
+            "type": "string",
+            "title": "HA root",
+            "default": "homeassistant",
+            "options": {
+                "grid_columns": 4
+            }
+        },
+        "node": {
+            "propertyOrder": 2,
+            "type": "string",
+            "title": "wb2ha node",
+            "default": "w2h",
+            "options": {
+                "grid_columns": 4
+            }
+        },
+        "wbId": {
+            "propertyOrder": 3,
+            "type": "string",
+            "title": "WB id",
+            "options": {
+                "grid_columns": 4
+            }
+        },
+        "all": {
+            "propertyOrder": 4,
+            "type": "boolean",
+            "description": "Publish all devices and controls",
+            "_format": "checkbox",
+            "title": "All devices and controls",
+            "options": {
+                "grid_columns": 12
+            }
+        },
+        "lists": {
+            "propertyOrder": 100,
+            "type": "object",
+            "_format": "categories",
+            "title": " ",
+            "options": {
+                "titleHidden": true,
+                "show_opt_in_restore": true,
+                "disable_edit_json": true,
+                "disable_properties": true,
+                "disable_collapse": true
+            },
+            "properties": {
+                "devices": {
+                    "propertyOrder": 10,
+                    "title": "Devices",
+                    "description": "Select devices and controls",
+                    "options": {
+                        "disable_edit_json": true,
+                        "disable_properties": true,
+                        "disable_collapse": true
+                    },
+                    "type": "object",
+                    "properties": {
+                        "system": {
+                            "propertyOrder": 1,
+                            "$ref": "#/definitions/device",
+                            "properties": {
+                                "controls": {
+                                    "properties": {
+                                        "Short SN": {
+                                            "propertyOrder": 1,
+                                            "$ref": "#/definitions/control"
+                                        },
+                                        "Current uptime": {
+                                            "propertyOrder": 2,
+                                            "$ref": "#/definitions/control"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "namedModifiers": {
+                    "propertyOrder": 20,
+                    "title": "Named Modifiers",
+                    "description": "These are named sets of options",
+                    "type": "array",
+                    "_format": "grid",
+                    "options": {
+                        "disable_collapse": true
+                    },
+                    "items": {
+                        "type": "object",
+                        "title": "Named Modifier",
+                        "headerTemplate": "{{ self.code }}",
+                        "options": {
+                            "collapsed": true
+                        },
+                        "properties": {
+                            "code": {
+                                "title": "Name",
+                                "type": "string",
+                                "description": "Name of the modifier",
+                                "pattern": "^[a-zA-Z0-9_]+$"
+                            },
+                            "value": {
+                                "title": "Definition",
+                                "type": "object",
+                                "_format": "grid",
+                                "properties": {
+                                    "type": {
+                                        "propertyOrder": 10,
+                                        "options": {
+                                            "grid_columns": 2,
+                                            "show_opt_in": true
+                                        },
+                                        "$ref": "#/definitions/type"
+                                    },
+                                    "mod": {
+                                        "options": {
+                                            "grid_columns": 7
+                                        },
+                                        "description": "Options for HA Discovery in Named Mod",
+                                        "propertyOrder": 20,
+                                        "$ref": "#/definitions/mod"
+                                    },
+                                    "namedModifiers": {
+                                        "_format": "table",
+                                        "options": {
+                                            "grid_columns": 3,
+                                            "show_opt_in": true,
+                                            "disable_collapse": true
+                                        },
+                                        "description": "Other Named Modifiers",
+                                        "propertyOrder": 30,
+                                        "$ref": "#/definitions/namedModifierNames"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "controlTypes": {
+                    "propertyOrder": 30,
+                    "title": "Control Types",
+                    "description": "WB Control Types mods",
+                    "type": "array",
+                    "_format": "grid",
+                    "options": {
+                        "disable_collapse": true
+                    },
+                    "items": {
+                        "type": "object",
+                        "title": "Control Type",
+                        "headerTemplate": "{{ self.code }}",
+                        "options": {
+                            "collapsed": true
+                        },
+                        "properties": {
+                            "code": {
+                                "title": "Name",
+                                "type": "string",
+                                "description": "WB control type name",
+                                "pattern": "^[a-zA-Z0-9-_]+$"
+                            },
+                            "value": {
+                                "$ref": "#/definitions/modify",
+                                "description": "WB control modifiers",
+                                "properties": {
+                                    "readonly": {
+                                        "options": {
+                                            "grid_columns": 12,
+                                            "show_opt_in": true
+                                        },
+                                        "title": "For readonly",
+                                        "description": "Additional modifiers for readonly",
+                                        "propertyOrder": 50,
+                                        "$ref": "#/definitions/modify"
+                                    },
+                                    "writable": {
+                                        "options": {
+                                            "grid_columns": 12,
+                                            "show_opt_in": true
+                                        },
+                                        "title": "For writable",
+                                        "description": "Additional modifiers for writable",
+                                        "propertyOrder": 60,
+                                        "$ref": "#/definitions/modify"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "units": {
+                    "propertyOrder": 40,
+                    "title": "Measurement Units",
+                    "description": "WB Units mods",
+                    "type": "array",
+                    "_format": "grid",
+                    "options": {
+                        "disable_collapse": true
+                    },
+                    "items": {
+                        "type": "object",
+                        "title": "Measurement Unit",
+                        "headerTemplate": "{{ self.code }}",
+                        "options": {
+                            "collapsed": true
+                        },
+                        "properties": {
+                            "code": {
+                                "title": "Abbreviation",
+                                "type": "string",
+                                "description": "WB unit name"
+                            },
+                            "value": {
+                                "$ref": "#/definitions/modify",
+                                "description": "WB unit modifiers",
+                                "properties": {
+                                    "readonly": {
+                                        "options": {
+                                            "grid_columns": 12,
+                                            "show_opt_in": true
+                                        },
+                                        "title": "For readonly",
+                                        "description": "Additional modifiers for readonly",
+                                        "propertyOrder": 50,
+                                        "$ref": "#/definitions/modify"
+                                    },
+                                    "writable": {
+                                        "options": {
+                                            "grid_columns": 12,
+                                            "show_opt_in": true
+                                        },
+                                        "title": "For writable",
+                                        "description": "Additional modifiers for writable",
+                                        "propertyOrder": 60,
+                                        "$ref": "#/definitions/modify"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "modify": {
+            "title": "Modify",
+            "type": "object",
+            "_format": "grid",
+            "options": {
+                "show_opt_in_restore": true,
+                "disable_edit_json": true,
+                "disable_properties": true,
+                "disable_collapse": true
+            },
+            "properties": {
+                "type": {
+                    "propertyOrder": 10,
+                    "options": {
+                        "grid_columns": 2,
+                        "show_opt_in": true
+                    },
+                    "description": "",
+                    "$ref": "#/definitions/type"
+                },
+                "mod": {
+                    "options": {
+                        "grid_columns": 7,
+                        "show_opt_in": true
+                    },
+                    "description": "",
+                    "propertyOrder": 20,
+                    "$ref": "#/definitions/mod"
+                },
+                "namedModifiers": {
+                    "_format": "table",
+                    "options": {
+                        "grid_columns": 3,
+                        "show_opt_in": true,
+                        "disable_collapse": true
+                    },
+                    "description": "",
+                    "propertyOrder": 30,
+                    "$ref": "#/definitions/namedModifierNames"
+                }
+            }
+        },
+        "namedModifierNames": {
+            "options": {
+                "wb": {
+                    "disable_panel": true
+                }
+            },
+            "title": "Named Modifiers",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "title": " ",
+                "watch": {
+                    "nameds": "lists.namedModifiers"
+                },
+                "enumSource": [
+                    {
+                        "source": "nameds",
+                        "value": "{{item.code}}"
+                    }
+                ]
+            }
+        },
+        "device": {
+            "options": {
+                "disable_edit_json": true,
+                "disable_properties": true,
+                "show_opt_in": true,
+                "collapsed": true
+            },
+            "type": "object",
+            "_format": "grid",
+            "additionalProperties": false,
+            "default": {
+                "controls": {
+                },
+                "reverse": true
+            },
+            "properties": {
+                "controls": {
+                    "propertyOrder": 30,
+                    "type": "object",
+                    "additionalProperties": true,
+                    "title": "Controls to modify",
+                    "options": {
+                        "disable_edit_json": true,
+                        "disable_properties": true,
+                        "grid_columns": 10
+                    }
+                },
+                "reverse": {
+                    "propertyOrder": 10,
+                    "headerTemplate": "{{if rootAll == \"true\" }}Don't include all{{else}}Include all{{endif}}",
+                    "type": "boolean",
+                    "_format": "checkbox",
+                    "watch": {
+                        "rootAll": "root.all"
+                    },
+                    "options": {
+                        "grid_columns": 1,
+                        "dependencies": {
+                            "root.all": true
+                        }
+                    }
+                }
+            }
+        },
+        "control": {
+            "options": {
+                "disable_properties": true,
+                "disable_edit_json": true,
+                "disable_collapse": false,
+                "collapsed": true,
+                "show_opt_in": true
+            },
+            "headerTemplate": "{{title}}{{, name |self.name}}{{, type |self.type}}{{, mods |self.namedModifiers}}",
+            "type": "object",
+            "additionalProperties": false,
+            "_format": "grid",
+            "properties": {
+                "name": {
+                    "propertyOrder": 5,
+                    "title": "HA Name",
+                    "description": "Name for HA",
+                    "options": {
+                        "grid_columns": 2,
+                        "show_opt_in": true
+                    },
+                    "type": "string"
+                },
+                "type": {
+                    "propertyOrder": 10,
+                    "options": {
+                        "grid_columns": 2,
+                        "show_opt_in": true
+                    },
+                    "$ref": "#/definitions/type"
+                },
+                "namedModifiers": {
+                    "_format": "table",
+                    "options": {
+                        "grid_columns": 4,
+                        "show_opt_in": true,
+                        "disable_collapse": true
+                    },
+                    "propertyOrder": 15,
+                    "$ref": "#/definitions/namedModifierNames"
+                },
+
+                "mod": {
+                    "options": {
+                        "grid_columns": 12,
+                        "compact": false,
+                        "show_opt_in": true
+                    },
+                    "description": "Options for HA Discovery in control",
+                    "propertyOrder": 50,
+                    "$ref": "#/definitions/mod"
+                },
+                "var": {
+                    "options": {
+                        "grid_columns": 4,
+                        "show_opt_in": true,
+                        "wb": {
+                            "disable_panel": true
+                        },
+                        "disable_collapse": true
+                    },
+                    "propertyOrder": 30,
+                    "_format": "table",
+                    "$ref": "#/definitions/var"
+                }
+            }
+        },
+        "mod": {
+            "title": "HA Discovery Payload",
+            "type": "array",
+            "options": {
+                "wb": {
+                    "disable_panel": true
+                },
+                "disable_collapse": true
+            },
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "_format": "wb-object",
+                "options": {
+                    "disable_edit_json": true,
+                    "disable_properties": true,
+                    "wb": {
+                        "disable_panel": true
+                    },
+                    "collapsed": true
+                },
+                "title": "Option",
+                "headerTemplate": "{{ self.code }} = {{ self.value }}",
+                "properties": {
+                    "code": {
+                        "title": "Option",
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9_-]+$"
+                    },
+                    "value": {
+                        "title": "Value",
+                        "options": {
+                            "titleHidden": true
+                        }
+                    }
+                }
+            }
+        },
+        "type": {
+            "title": "Platform",
+            "description": "Replace HA Type to this",
+            "type": "string",
+            "enum": [
+                "button",
+                "cover",
+                "climate",
+                "sensor",
+                "binary_sensor",
+                "number",
+                "fan",
+                "text",
+                "select",
+                "switch",
+                "valve",
+                "light"
+            ]
+        },
+        "var": {
+            "title": "Variables",
+            "description": "Values for the variables in the form of {var}",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "title": "Placeholder",
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9_]+$"
+                    },
+                    "value": {
+                        "title": "Value"
+                    }
+                }
+            }
+        }
+    },
+    "translations": {
+        "ru": {
+            "WB unit modifiers": "Опции MQTT Discovery, которые следует добавить для контрола с такой единицей измерения",
+            "WB unit name": "Сокращенное обозначение единицы измерения в WirenBoard",
+            "Abbreviation": "Сокращение",
+            "Measurement Units": "Единицы измерения",
+            "Measurement Unit": "Единица измерения",
+            "WB Units mods": "Модификаторы, автоматически применяемые контролам (элементам управления и показателям) устройств WirenBoard в зависимости от указанной в них единице измерения",
+            "Option": "Опция",
+            "Value": "Значение",
+            "For readonly": "Если только чтение",
+            "Additional modifiers for readonly": "Дополнительные модификаторы для контролов, доступных только для чтения",
+            "For writable": "Если изменяемый",
+            "Additional modifiers for writable": "Дополнительные модификаторы для изменяемых контролов",
+            "Other Named Modifiers": "Другие именованные модификаторы",
+            "Variables": "Переменные",
+            "Values for the variables in the form of {var}": "Значения переменных вида {var}",
+            "Controls to modify": "Какие контролы изменить при публикации",
+            "{{if rootAll == \"true\" }}Don't include all{{else}}Include all{{endif}}":
+                    "{{if rootAll == \"true\" }}Все не добавлять{{else}}Добавить все{{endif}}",
+            "WB control modifiers": "Опции MQTT Discovery, которые следует добавить для этого контрола",
+            "Modify": "Изменить",
+            "WB control type name": "Наименование типа элемента управления или индикатора (\"контрола\") в WirenBoard",
+            "Control Types": "Типы контролов",
+            "Control Type": "Тип контрола",
+            "WB Control Types mods": "Модификаторы, автоматически применяемые контролам (элементам управления и показателям) устройств WirenBoard в зависимости от их типа",
+            "{{title}}{{, name |self.name}}{{, type |self.type}}{{, mods |self.namedModifiers}}": "{{title}}{{, имя |self.name}}{{, тип |self.type}}{{, мод |self.namedModifiers}}",
+            "{{title}}{{, name |self.name}}{{, type |self.type}}": "{{title}}{{, имя |self.name}}{{, тип |self.type}}",
+            "HA Name": "Имя",
+            "Name for HA": "Опубликовать контрол в Home Assistant с таким наименованием сущности",
+            "Options for HA Discovery in control": "Опции для добавления в сообщение Home Assistant MQTT Discovery. Можно использовать переменные в виде {device.id}, {control.id}, {control.meta.units}, а также произвольные переменные вида {var}, которые надо будет задать для этого контрола в разделе \"Переменные\"",
+            "Options for HA Discovery in Named Mod": "Дополнительные опции для добавления в сообщение Home Assistant MQTT Discovery. Можно использовать переменные в виде {device.id}, {control.id}, {control.meta.units}, а также произвольные переменные вида {var}, которые надо будет задать для каждого контрола, использующего этот модификатор",
+            "HA Discovery Payload": "Содержимое сообщения MQTT Discovery",
+            "Replace HA Type to this": "При активации этого пункта будет указан этот тип устройства Home Assistant (\"платформа\")",
+            "Platform": "Тип",
+            "These are named sets of options": "Поименованные наборы опций, которые можно добавлять в сообщения топиков обнаружения Home Assistant MQTT Discovery",
+            "Name of the modifier": "Имя модификатора для указания там, где нужно добавить эти опции обнаружения MQTT Discovery",
+            "Name": "Имя",
+            "Definition": "Определение",
+            "Named Modifiers": "Именованные модификаторы",
+            "Named Modifier": "Именованный модификатор",
+            "wb2ha Configuration": "wb2ha - Настройка отображения устройств WirenBoard в Home Assistant",
+            "Configure WB devices to add to HA": "Выбирайте контролы WirenBoard на вкладке \"Устройства WirenBoard\" для публикации в Home Assistant с помощью функции MQTT Discovery, в том числе изменяя отправляемые опции. Используйте другие вкладки для настройки часто используемых групп изменений",
+            "HA root": "Корень топика Home Assistant Discovery MQTT",
+            "wb2ha node": "Элемент node в топике Home Assistant MQTT Discovery",
+            "WB id": "Идентификатор контроллера WirenBoard для включения в идентификаторы устройств",
+            "All devices and controls": "Опубликовать все устройства WirenBoard и их контролы",
+            "Devices": "Устройства WirenBoard",
+            "Select devices and controls": "Выберите устройства и контролы WirenBoard, которые надо опубликовать или исключить из публикации в HomeAssistant",
+            "Publish all devices and controls": "Если установлена галочка, все контролы всех устройств WirenBoard будут добавлены в Home Assistant, за исключением невыбранных контролов в устройствах, помеченных галочкой \"Все не добавлять\".<br/>Если галочка не установлена, будут добавлены только измененные контролы, а также все контролы в устройствах, помеченных галочкой \"Добавить все\""
+        },
+        "en": {
+            "WB unit modifiers": "MQTT Discovery Options to add for a control with this measurement unit",
+            "WB unit name": "The abbreviated measurement unit name used in WirenBoard",
+            "WB Units mods": "WirenBoard device controls and indicators modifiers applied automatically based on their measurement units",
+            "Additional modifiers for readonly": "Additional modifiers for the read only controls",
+            "Additional modifiers for writable": "Additional modifiers for the writable controls",
+            "Controls to modify": "Which controls to modify when publish",
+            "WB control modifiers": "MQTT Discovery Options to add for a control of this type",
+            "WB control type name": "WirenBoard control or indicator name",
+            "WB Control Types mods": "WirenBoard device controls and indicators modifiers applied automatically based on their types",
+            "HA Name": "Name",
+            "Name for HA": "Publish the control with this Home Assistant entity name",
+            "Platform": "Type",
+            "Options for HA Discovery in control": "Options for the Home Assistant MQTT Discovery message. Variables like {device.id}, {control.id}, {control.meta.units} may be used as well as the arbitrary variables that have to be defined for this control in the \"Variables\" section",
+            "Options for HA Discovery in Named Mod": "Additional options for the Home Assistant MQTT Discovery message. Variables like {device.id}, {control.id}, {control.meta.units} may be used as well as the arbitrary variables that have to be defined for each control that uses this modifier",
+            "HA Discovery Payload": "MQTT Discovery message payload",
+            "Replace HA Type to this": "When activated, this Home Assistant \"Platform\" (generic device type) will be used",
+            "These are named sets of options": "The named sets of options to add into the Home Assistant MQTT Discovery message payload",
+            "Name of the modifier": "Modifier name to use wherever these MQTT Discovery options need to be added",
+            "wb2ha Configuration": "wb2ha - Configuration of the WirenBoard devices and controls to display in Home Assistant",
+            "Configure WB devices to add to HA": "Select the WirenBoard controls to publish in the Home Assistant MQTT Discovery topics using the \"WirenBoard Devices\" tab, optionally amending the payload. Use other tabs to configure the frequently used modifications",
+            "HA root": "Home Assistant Discovery MQTT topic root!",
+            "wb2ha node": "WirenBoard To Home Assistant Discovery MQTT topic node element",
+            "WB id": "WirenBoard controller identifier to include in the device identifiers",
+            "All devices and controls": "Publish every WirenBoard device and control",
+            "Devices": "WirenBoard Devices",
+            "Select devices and controls": "Select which WirenBoard devices and controls to include or exclude from publishing in Home Assistant",
+            "Publish all devices and controls": "When checked, all controls of every WirenBoard device will be published to Home Assistant, except the unselected controls of the devices marked with \"Don't include all\" checkbox.<br/>If unchecked, anly the modified controls will be added, plus all controls of the devices marked with \"Include all\" checkbox"
+        }
+    }
+}

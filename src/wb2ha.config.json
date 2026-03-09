@@ -1,0 +1,516 @@
+{
+    "all": false,
+    "haroot": "homeassistant",
+    "lists": {
+        "controlTypes": [
+            {
+                "code": "sound_level",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "sound_pressure"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "dB"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "concentration",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "carbon_dioxide"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "ppm"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "rel_humidity",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "humidity"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "%"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "voltage",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "voltage"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "V"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "lux",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "illuminance"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "lx"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "temperature",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "temperature"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "°C"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "range",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "slider"
+                            }
+                        ],
+                        "type": "number"
+                    }
+                }
+            },
+            {
+                "code": "value",
+                "value": {
+                    "readonly": {
+                        "type": "sensor",
+                        "ifUnset": [
+                            {
+                                "code": "unit_of_measurement",
+                                "value": "%"
+                            }
+                        ]
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "mode",
+                                "value": "box"
+                            }
+                        ],
+                        "type": "number"
+                    }
+                }
+            },
+            {
+                "code": "switch",
+                "value": {
+                    "readonly": {
+                        "type": "binary_sensor"
+                    },
+                    "writable": {
+                        "type": "switch"
+                    },
+                    "mod": [
+                        {
+                            "code": "payload_on",
+                            "value": 1
+                        },
+                        {
+                            "code": "payload_off",
+                            "value": 0
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "alarm",
+                "value": {
+                    "readonly": {
+                        "type": "binary_sensor"
+                    },
+                    "writable": {
+                        "type": "switch"
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "problem"
+                        },
+                        {
+                            "code": "payload_on",
+                            "value": 1
+                        },
+                        {
+                            "code": "payload_off",
+                            "value": 0
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "text",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "platform",
+                                "value": "text"
+                            }
+                        ],
+                        "type": "text"
+                    }
+                }
+            },
+            {
+                "code": "w1-id",
+                "value": {
+                    "readonly": {
+                        "type": "sensor"
+                    },
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "platform",
+                                "value": "text"
+                            }
+                        ],
+                        "type": "text"
+                    }
+                }
+            },
+            {
+                "code": "rgb",
+                "value": {
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "command_topic",
+                                "value": "/devices/{device.id}/controls/RGB Strip/on"
+                            }
+                        ]
+                    },
+                    "mod": [
+                        {
+                            "code": "rgb_state_topic",
+                            "value": "/devices/{device.id}/controls/{control.id}"
+                        },
+                        {
+                            "code": "rgb_command_topic",
+                            "value": "/devices/{device.id}/controls/{control.id}/on"
+                        },
+                        {
+                            "code": "rgb_value_template",
+                            "value": "{{ value.split(';') | join(',') }}"
+                        },
+                        {
+                            "code": "rgb_command_template",
+                            "value": "{{ red }};{{ green }};{{ blue }}"
+                        },
+                        {
+                            "code": "state_topic",
+                            "value": "/devices/{device.id}/controls/RGB Strip"
+                        },
+                        {
+                            "code": "payload_on",
+                            "value": 1
+                        },
+                        {
+                            "code": "payload_off",
+                            "value": 0
+                        }
+                    ],
+                    "type": "light"
+                }
+            },
+            {
+                "code": "pushbutton",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "payload_press",
+                            "value": 1
+                        }
+                    ],
+                    "type": "button"
+                }
+            }
+        ],
+        "devices": {
+            "system": {
+                "controls": {
+                    "Current uptime": {},
+                    "Short SN": {}
+                },
+                "reverse": false
+            }
+        },
+        "namedModifiers": [],
+        "units": [
+            {
+                "code": "ppb",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "volatile_organic_compounds_parts"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "ppb"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "₽",
+                "value": {
+                    "writable": {
+                        "mod": [
+                            {
+                                "code": "step",
+                                "value": 0.01
+                            }
+                        ]
+                    },
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "monetary"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "RUR"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "%, RH",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "humidity"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "%"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "mbar",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "pressure"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "bar",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "pressure"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "deg C",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "temperature"
+                        },
+                        {
+                            "code": "unit_of_measurement",
+                            "value": "°C"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "V",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "voltage"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "W",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "power"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "kWh",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "energy"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "Hz",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "frequency"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "s",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "duration"
+                        }
+                    ]
+                }
+            },
+            {
+                "code": "ms",
+                "value": {
+                    "mod": [
+                        {
+                            "code": "device_class",
+                            "value": "duration"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "node": "w2h",
+    "wbId": "12345"
+}
