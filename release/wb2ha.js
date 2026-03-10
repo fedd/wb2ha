@@ -85,6 +85,7 @@ function _updateSchema() {
                 var oldDeviceProperties = SCHEMA.properties.lists.properties.devices.properties;
                 SCHEMA.properties.lists.properties.devices.properties = {};
 
+                var collectedTranslations = {};
                 // take the devices snapshot and populate the devices in schema
                 var devIds = Object.keys(devices);
                 devIds.sort();
@@ -112,18 +113,21 @@ function _updateSchema() {
                     if (devices[devIds[i]].meta && devices[devIds[i]].meta.title) {
                         var titles = devices[devIds[i]].meta.title;
                         if (typeof titles === 'string' || titles instanceof String) {
-                            if (devIds[i] !== titles) {
-                                SCHEMA.properties.
-                                        lists.
-                                        properties.
-                                        devices.
-                                        properties[devIds[i]].title = devIds[i] + " (" + titles + ")";
-                            }
+                            SCHEMA.properties.
+                                    lists.
+                                    properties.
+                                    devices.
+                                    properties[devIds[i]].title = devIds[i] === titles ? devIds[i] : devIds[i] + " (" + titles + ")";
                         } else {
                             for (var lang in titles) {
                                 if (!SCHEMA.translations[lang]) {
                                     SCHEMA.translations[lang] = {};
                                 }
+                                collectedTranslations[SCHEMA.properties.
+                                        lists.
+                                        properties.
+                                        devices.
+                                        properties[devIds[i]].title] = devIds[i];
                                 SCHEMA.translations[lang][SCHEMA.properties.
                                         lists.
                                         properties.
@@ -132,6 +136,12 @@ function _updateSchema() {
                                         devIds[i] === titles[lang] ? devIds[i] : devIds[i] + " (" + titles[lang] + ")";
                             }
                         }
+                    } else {
+                        SCHEMA.properties.
+                                lists.
+                                properties.
+                                devices.
+                                properties[devIds[i]].title = devIds[i];
                     }
 
                     //add controls
@@ -156,21 +166,27 @@ function _updateSchema() {
                                 devices[devIds[i]].controls[ctrIds[j]].meta.title) {
                             var titles = devices[devIds[i]].controls[ctrIds[j]].meta.title;
                             if (typeof titles === 'string' || titles instanceof String) {
-                                if (ctrIds[j] !== titles) {
-                                    SCHEMA.properties.
+                                SCHEMA.properties.
+                                        lists.
+                                        properties.
+                                        devices.
+                                        properties[devIds[i]].
+                                        properties.
+                                        controls.
+                                        properties[ctrIds[j]].title = ctrIds[j] === titles ? ctrIds[j] : ctrIds[j] + " (" + titles + ")";
+                            } else {
+                                for (var lang in titles) {
+                                    if (!SCHEMA.translations[lang]) {
+                                        SCHEMA.translations[lang] = {};
+                                    }
+                                    collectedTranslations[SCHEMA.properties.
                                             lists.
                                             properties.
                                             devices.
                                             properties[devIds[i]].
                                             properties.
                                             controls.
-                                            properties[ctrIds[j]].title = ctrIds[j] + " (" + titles + ")";
-                                }
-                            } else {
-                                for (var lang in titles) {
-                                    if (!SCHEMA.translations[lang]) {
-                                        SCHEMA.translations[lang] = {};
-                                    }
+                                            properties[ctrIds[j]].title] = ctrIds[j];
                                     SCHEMA.translations[lang][SCHEMA.properties.
                                             lists.
                                             properties.
@@ -182,9 +198,25 @@ function _updateSchema() {
                                             ctrIds[j] === titles[lang] ? ctrIds[j] : ctrIds[j] + " (" + titles[lang] + ")";
                                 }
                             }
+                        } else {
+                            SCHEMA.properties.
+                                    lists.
+                                    properties.
+                                    devices.
+                                    properties[devIds[i]].
+                                    properties.
+                                    controls.
+                                    properties[ctrIds[j]].title = ctrIds[j];
                         }
+                    }
+                }
 
-
+                // put ids instead of the missing translations
+                for (var title in collectedTranslations) {
+                    for (var lang in SCHEMA.translations) {
+                        if (!SCHEMA.translations[lang][title]) {
+                            SCHEMA.translations[lang][title] = collectedTranslations[title];
+                        }
                     }
                 }
 
