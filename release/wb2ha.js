@@ -1,4 +1,4 @@
-/* global log */
+/* global log, SCHEMA, CONFIG */
 
 // Convert Wirenboard metas to Home Assistant MQTT Discovery configs.
 // A Wirenboard rule.
@@ -86,18 +86,16 @@ function _updateSchema() {
                 SCHEMA.properties.lists.properties.devices.properties = {};
 
                 // take the devices snapshot and populate the devices in schema
-                var i = 0;
                 var devIds = Object.keys(devices);
                 devIds.sort();
-                for (var devId in devIds) {
-                    i++;
+                for (var i in devIds) {
                     // add device
                     SCHEMA.properties.
                             lists.
                             properties.
                             devices.
-                            properties[devId] = {
-                        "title": "Device " + devId,
+                            properties[devIds[i]] = {
+                        "title": "Device " + devIds[i],
                         "propertyOrder": i,
                         "$ref": "#/definitions/device",
                         "properties": {
@@ -108,45 +106,85 @@ function _updateSchema() {
                     };
 
                     // device title translations
-                    var titles = devices[devId].meta.title;
-                    if (typeof titles === 'string' || titles instanceof String) {
-                        if (devId !== titles) {
-                            SCHEMA.properties.
-                                    lists.
-                                    properties.
-                                    devices.
-                                    properties[devId].title = devId + " (" + titles + ")";
-                        }
-                    } else {
-                        for (var lang in titles) {
-                            if (!SCHEMA.translations[lang]) {
-                                SCHEMA.translations[lang] = {};
+                    if (debugging) {
+                        log("Looking into device {}: {}", devIds[i], JSON.stringify(devices[devIds[i]]));
+                    }
+                    if (devices[devIds[i]].meta && devices[devIds[i]].meta.title) {
+                        var titles = devices[devIds[i]].meta.title;
+                        if (typeof titles === 'string' || titles instanceof String) {
+                            if (devIds[i] !== titles) {
+                                SCHEMA.properties.
+                                        lists.
+                                        properties.
+                                        devices.
+                                        properties[devIds[i]].title = devIds[i] + " (" + titles + ")";
                             }
-                            SCHEMA.translations[lang][SCHEMA.properties.
-                                    lists.
-                                    properties.
-                                    devices.
-                                    properties[devId].title] = devId + " (" + titles[lang] + ")";
+                        } else {
+                            for (var lang in titles) {
+                                if (!SCHEMA.translations[lang]) {
+                                    SCHEMA.translations[lang] = {};
+                                }
+                                SCHEMA.translations[lang][SCHEMA.properties.
+                                        lists.
+                                        properties.
+                                        devices.
+                                        properties[devIds[i]].title] =
+                                        devIds[i] === titles[lang] ? devIds[i] : devIds[i] + " (" + titles[lang] + ")";
+                            }
                         }
                     }
 
                     //add controls
-                    var j = 0;
-                    var ctrIds = Object.keys(devices[devId].controls);
+                    var ctrIds = Object.keys(devices[devIds[i]].controls);
                     ctrIds.sort();
-                    for (var ctrId in ctrIds) {
-                        j++;
+                    for (var j in ctrIds) {
                         SCHEMA.properties.
                                 lists.
                                 properties.
                                 devices.
-                                properties[devId].
+                                properties[devIds[i]].
                                 properties.
                                 controls.
-                                properties[ctrId] = {
+                                properties[ctrIds[j]] = {
+                            "title": "Control " + devIds[i] + "_" + ctrIds[j],
                             "propertyOrder": j,
                             "$ref": "#/definitions/control"
                         };
+
+                        // control title translations
+                        if (devices[devIds[i]].controls[ctrIds[j]].meta &&
+                                devices[devIds[i]].controls[ctrIds[j]].meta.title) {
+                            var titles = devices[devIds[i]].controls[ctrIds[j]].meta.title;
+                            if (typeof titles === 'string' || titles instanceof String) {
+                                if (ctrIds[j] !== titles) {
+                                    SCHEMA.properties.
+                                            lists.
+                                            properties.
+                                            devices.
+                                            properties[devIds[i]].
+                                            properties.
+                                            controls.
+                                            properties[ctrIds[j]].title = ctrIds[j] + " (" + titles + ")";
+                                }
+                            } else {
+                                for (var lang in titles) {
+                                    if (!SCHEMA.translations[lang]) {
+                                        SCHEMA.translations[lang] = {};
+                                    }
+                                    SCHEMA.translations[lang][SCHEMA.properties.
+                                            lists.
+                                            properties.
+                                            devices.
+                                            properties[devIds[i]].
+                                            properties.
+                                            controls.
+                                            properties[ctrIds[j]].title] =
+                                            ctrIds[j] === titles[lang] ? ctrIds[j] : ctrIds[j] + " (" + titles[lang] + ")";
+                                }
+                            }
+                        }
+
+
                     }
                 }
 
@@ -1561,15 +1599,11 @@ var SCHEMA =
             {
                 "code": "rgb",
                 "value": {
-                    "writable": {
-                        "mod": [
-                            {
-                                "code": "command_topic",
-                                "value": "/devices/{device.id}/controls/RGB Strip/on"
-                            }
-                        ]
-                    },
                     "mod": [
+                        {
+                            "code": "command_topic",
+                            "value": "/devices/{device.id}/controls/RGB Strip/on"
+                        },
                         {
                             "code": "rgb_state_topic",
                             "value": "/devices/{device.id}/controls/{control.id}"
