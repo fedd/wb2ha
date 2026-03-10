@@ -1,7 +1,7 @@
 # wb2ha
 ## WirenBoard devices to Home Assistant MQTT Discovery
 
-I haven't tried this version yet! Not for use anywhere.
+For English, translate with your browser.
 
 ## Перенос устройств WirenBoard в Home Assistant с помощью публикации данных из топиков `meta` в топики Discovery
 
@@ -9,6 +9,6 @@ I haven't tried this version yet! Not for use anywhere.
 
 ### Как пользоваться
 
-Созайте правило wb2ha и скопируйте туда содержимое файла release/wb2ha.js
+Созайте правило wb2ha и скопируйте туда содержимое файла [release/wb2ha.js](release/wb2ha.js).
 
 
