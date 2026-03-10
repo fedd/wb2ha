@@ -288,15 +288,11 @@
             {
                 "code": "rgb",
                 "value": {
-                    "writable": {
-                        "mod": [
-                            {
-                                "code": "command_topic",
-                                "value": "/devices/{device.id}/controls/RGB Strip/on"
-                            }
-                        ]
-                    },
                     "mod": [
+                        {
+                            "code": "command_topic",
+                            "value": "/devices/{device.id}/controls/RGB Strip/on"
+                        },
                         {
                             "code": "rgb_state_topic",
                             "value": "/devices/{device.id}/controls/{control.id}"

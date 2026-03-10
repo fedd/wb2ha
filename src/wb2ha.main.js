@@ -1,4 +1,4 @@
-/* global log */
+/* global log, SCHEMA, CONFIG */
 
 // Convert Wirenboard metas to Home Assistant MQTT Discovery configs.
 // A Wirenboard rule.
