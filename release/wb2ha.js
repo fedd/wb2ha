@@ -5438,8 +5438,12 @@ var SCHEMA = {
                             "properties": {
                                 "schema": {
                                     "description": "The mqtt light platform with default schema lets you control your MQTT enabled lights. It supports setting brightness, color temperature, effects, flashing, on/off, RGB colors, transitions, XY colors and white values.",
-                                    "const": "default",
                                     "type": "string",
+                                    "enum": [
+                                        "default",
+                                        "json",
+                                        "template"
+                                    ],
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -9439,19 +9443,31 @@ var SCHEMA = {
             "properties": {
                 "topic": {
                     "description": "The MQTT topic subscribed to receive availability (online/offline) updates.",
-                    "type": "string"
+                    "type": "string",
+                    "options": {
+                        "show_opt_in": true
+                    }
                 },
                 "payload_available": {
                     "description": "The payload that represents the available state.",
-                    "type": "string"
+                    "type": "string",
+                    "options": {
+                        "show_opt_in": true
+                    }
                 },
                 "payload_not_available": {
                     "description": "The payload that represents the unavailable state.",
-                    "type": "string"
+                    "type": "string",
+                    "options": {
+                        "show_opt_in": true
+                    }
                 },
                 "value_template": {
                     "description": "Defines a template to extract the value for payload_available and payload_not_available.",
-                    "type": "string"
+                    "type": "string",
+                    "options": {
+                        "show_opt_in": true
+                    }
                 }
             },
             "additionalProperties": false,

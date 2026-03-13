@@ -83,10 +83,25 @@ try {
 
         {
             const refs = _findRefs(platforms[platform].anyOf);
+
             for (const defI in refs) {
+
                 for (const prop in haSchema.definitions[refs[defI]].properties) {
                     if (!propertyHolder[prop]) {
                         propertyHolder[prop] = haSchema.definitions[refs[defI]].properties[prop];
+                    } else {
+                        // multischema
+                        if (haSchema.definitions[refs[defI]].properties[prop].const !== undefined) {
+                            if (!propertyHolder[prop].enum) {
+                                propertyHolder[prop].enum = [
+                                    propertyHolder[prop].const,
+                                    haSchema.definitions[refs[defI]].properties[prop].const
+                                ];
+                                delete propertyHolder[prop].const;
+                            } else {
+                                propertyHolder[prop].enum.push(haSchema.definitions[refs[defI]].properties[prop].const);
+                            }
+                        }
                     }
 
                     if (propertyHolder[prop].description) {
@@ -128,6 +143,12 @@ try {
 
     // resolve the $refs
     _resolveAllRefs(JSON.stringify(typedModOneOfs, null, 4), haSchema, newDefs);
+
+    for (const def in newDefs) {
+        if (newDefs[def].properties) {
+            _decorateObject(newDefs[def]);
+        }
+    }
 
     // write two hint files
     fs.writeFileSync(path.resolve(__dirname, 'typedModOneOf.json'), JSON.stringify(typedModOneOfs, null, 4), 'utf8');
