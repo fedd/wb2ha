@@ -397,7 +397,7 @@ function _process(deviceId, controlId) {
         },
         origin: {
             "name": "wb2ha",
-            "sw": "0.2",
+            "sw": "0.3",
             "url": "https://github.com/fedd/wb2ha"
         },
         availability_mode: "latest",
@@ -536,7 +536,7 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
         dest.type = src.type;
     }
     if (src.name) {
-        dest.name = src.name;
+        mod.name = src.name;
     }
     if (src.var) {
         if (!dest.var) {
@@ -555,7 +555,7 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
         }
     }
     if (src.mod) {
-        if (typeof src.mod === 'array') {
+        if (typeof src.mod === 'array' || src.mod instanceof Array) {
             for (var mi in src.mod) {
                 mod[src.mod[mi].code] = src.mod[mi].value;
             }
@@ -569,7 +569,7 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
         }
     }
     if (src.ifUnset) {
-        if (typeof src.ifUnset === 'array') {
+        if (typeof src.ifUnset === 'array' || src.ifUnset instanceof Array) {
             for (var mi in src.ifUnset) {
                 if (mod[src.ifUnset[mi].code] === undefined) {
                     mod[src.ifUnset[mi].code] = src.ifUnset[mi].value;
@@ -1043,12 +1043,13 @@ var SCHEMA = {
                 },
                 "ifUnset": {
                     "options": {
+                        "disable_collapse": false,
+                        "collapsed": true,
                         "grid_columns": 8,
                         "show_opt_in": true
                     },
                     "title": "If Unset",
-                    "description": "Apply these options only if they are not set by other modifiers",
-                    "propertyOrder": 25,
+                    "propertyOrder": 40,
                     "$ref": "#/definitions/typedMod"
                 },
                 "namedModifiers": {
@@ -1199,6 +1200,7 @@ var SCHEMA = {
             },
             "propertyOrder": 1,
             "title": "Type",
+            "description": "Options for HA Discovery in control",
             "oneOf": [
                 {
                     "$ref": "#/definitions/mod",
@@ -1207,8 +1209,7 @@ var SCHEMA = {
                     "options": {
                         "compact": false,
                         "show_opt_in": true
-                    },
-                    "description": "Options for HA Discovery in control"
+                    }
                 },
                 {
                     "type": "object",
@@ -5437,7 +5438,7 @@ var SCHEMA = {
                             "properties": {
                                 "schema": {
                                     "description": "The mqtt light platform with default schema lets you control your MQTT enabled lights. It supports setting brightness, color temperature, effects, flashing, on/off, RGB colors, transitions, XY colors and white values.",
-                                    "const": "template",
+                                    "const": "default",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -9524,7 +9525,7 @@ var SCHEMA = {
             "Devices": "Устройства WirenBoard",
             "Select devices and controls": "Выберите устройства и контролы WirenBoard, которые надо опубликовать или исключить из публикации в HomeAssistant",
             "Publish all devices and controls": "Если установлена галочка, все контролы всех устройств WirenBoard будут добавлены в Home Assistant, за исключением невыбранных контролов в устройствах, помеченных галочкой \"Все не добавлять\".<br/>Если галочка не установлена, будут добавлены только измененные контролы, а также все контролы в устройствах, помеченных галочкой \"Добавить все\"",
-            "Apply these options only if they are not set by other modifiers": "Применить эти опции, только если они не установлены другими модификаторами"
+            "If Unset": "Применить нижеуказаные опции, только если они не установлены другими модификаторами"
         },
         "en": {
             "WB unit modifiers": "MQTT Discovery Options to add for a control with this measurement unit",
@@ -9547,13 +9548,14 @@ var SCHEMA = {
             "Name of the modifier": "Modifier name to use wherever these MQTT Discovery options need to be added",
             "wb2ha Configuration": "wb2ha - Configuration of the WirenBoard devices and controls to display in Home Assistant",
             "Configure WB devices to add to HA": "Select the WirenBoard controls to publish in the Home Assistant MQTT Discovery topics using the \"WirenBoard Devices\" tab, optionally amending the payload. Use other tabs to configure the frequently used modifications",
-            "HA root": "Home Assistant Discovery MQTT topic root!",
+            "HA root": "Home Assistant Discovery MQTT topic root",
             "wb2ha node": "WirenBoard To Home Assistant Discovery MQTT topic node element",
             "WB id": "WirenBoard controller identifier to include in the device identifiers",
             "All devices and controls": "Publish every WirenBoard device and control",
             "Devices": "WirenBoard Devices",
             "Select devices and controls": "Select which WirenBoard devices and controls to include or exclude from publishing in Home Assistant",
-            "Publish all devices and controls": "When checked, all controls of every WirenBoard device will be published to Home Assistant, except the unselected controls of the devices marked with \"Don't include all\" checkbox.<br/>If unchecked, anly the modified controls will be added, plus all controls of the devices marked with \"Include all\" checkbox"
+            "Publish all devices and controls": "When checked, all controls of every WirenBoard device will be published to Home Assistant, except the unselected controls of the devices marked with \"Don't include all\" checkbox.<br/>If unchecked, anly the modified controls will be added, plus all controls of the devices marked with \"Include all\" checkbox",
+            "If Unset": "Apply the options below only if they are not set by other modifiers"
         }
     }
 };

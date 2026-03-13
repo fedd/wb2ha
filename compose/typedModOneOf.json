@@ -4226,7 +4226,7 @@
                 "properties": {
                     "schema": {
                         "description": "The mqtt light platform with default schema lets you control your MQTT enabled lights. It supports setting brightness, color temperature, effects, flashing, on/off, RGB colors, transitions, XY colors and white values.",
-                        "const": "template",
+                        "const": "default",
                         "type": "string",
                         "options": {
                             "show_opt_in": true

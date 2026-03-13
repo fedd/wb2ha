@@ -85,7 +85,9 @@ try {
             const refs = _findRefs(platforms[platform].anyOf);
             for (const defI in refs) {
                 for (const prop in haSchema.definitions[refs[defI]].properties) {
-                    propertyHolder[prop] = haSchema.definitions[refs[defI]].properties[prop];
+                    if (!propertyHolder[prop]) {
+                        propertyHolder[prop] = haSchema.definitions[refs[defI]].properties[prop];
+                    }
 
                     if (propertyHolder[prop].description) {
                         propertyHolder[prop].description =
