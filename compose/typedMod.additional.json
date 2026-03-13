@@ -1,0 +1,207 @@
+{
+    "number": {
+        "mode": {
+            "description": "Control how the number should be displayed in the UI. Can be set to box or slider to force a display mode.",
+            "enum": [
+                "box",
+                "slider"
+            ],
+            "type": "string"
+        }
+    },
+    "text": {
+        "mode": {
+            "description": "The mode off the text entity. Must be either text or password.",
+            "enum": [
+                "text",
+                "password"
+            ],
+            "type": "string"
+        },
+        "command_topic": {
+            "description": "The MQTT topic to publish commands to change the text state.\nhttps://www.home-assistant.io/integrations/number.mqtt/#command_topic",
+            "type": "string"
+        },
+        "pattern": {
+            "description": "A valid regular expression the text being set or received must match with.",
+            "type": "string"
+        },
+        "max": {
+            "description": "The maximum size of a text being set or received (maximum is 255).",
+            "type": "number"
+        },
+        "min": {
+            "description": "The minimum size of a text being set or received.",
+            "type": "number"
+        },
+        "name": {
+            "description": "The name of the MQTT text.\nhttps://www.home-assistant.io/integrations/number.mqtt#name",
+            "type": "string"
+        },
+        "qos": {
+            "description": "The maximum QoS level to be used when receiving and publishing messages.\nhttps://www.home-assistant.io/integrations/number.mqtt/#qos",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "type": "number"
+        },
+        "retain": {
+            "description": "If the published message should have the retain flag on or not.\nhttps://www.home-assistant.io/integrations/number.mqtt/#retain",
+            "type": "boolean"
+        },
+        "state_topic": {
+            "description": "The MQTT topic subscribed to receive state updates.\nhttps://www.home-assistant.io/integrations/number.mqtt/#state_topic",
+            "type": "string"
+        },
+        "value_template": {
+            "description": "Defines a template to extract the text state value from the payload received on state_topic.",
+            "type": "string"
+        },
+        "availability": {
+            "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Availability"
+            }
+        },
+        "availability_mode": {
+            "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
+            "enum": [
+                "all",
+                "any",
+                "latest"
+            ],
+            "type": "string"
+        },
+        "availability_template": {
+            "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
+            "type": "string"
+        },
+        "availability_topic": {
+            "description": "The MQTT topic subscribed to receive availability (online/offline) updates.",
+            "type": "string"
+        },
+        "payload_available": {
+            "description": "The payload that represents the available state.",
+            "type": "string"
+        },
+        "payload_not_available": {
+            "description": "The payload that represents the unavailable state.",
+            "type": "string"
+        },
+        "device": {
+            "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
+            "type": "object",
+            "properties": {
+                "configuration_url": {
+                    "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
+                    "type": "string"
+                },
+                "connections": {
+                    "description": "A list of connections of the device to the outside world as a list of tuples.",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "string",
+                                "title": "connection_type"
+                            },
+                            {
+                                "type": "string",
+                                "title": "connection_identifier"
+                            }
+                        ],
+                        "minItems": 2,
+                        "maxItems": 2
+                    }
+                },
+                "hw_version": {
+                    "description": "The hardware version of the device.",
+                    "type": "string"
+                },
+                "identifiers": {
+                    "description": "A list of IDs that uniquely identify the device. For example a serial number.",
+                    "anyOf": [
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "manufacturer": {
+                    "description": "The manufacturer of the device.",
+                    "type": "string"
+                },
+                "model": {
+                    "description": "The model of the device.",
+                    "type": "string"
+                },
+                "model_id": {
+                    "description": "The model identifier of the device.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the device.",
+                    "type": "string"
+                },
+                "serial_number": {
+                    "description": "The serial number of the device.",
+                    "type": "string"
+                },
+                "suggested_area": {
+                    "description": "Suggest an area if the device isn’t in one yet.",
+                    "type": "string"
+                },
+                "sw_version": {
+                    "description": "The firmware version of the device.",
+                    "type": "string"
+                },
+                "via_device": {
+                    "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "enabled_by_default": {
+            "description": "Flag which defines if the entity should be enabled when first added.",
+            "type": "boolean"
+        },
+        "entity_category": {
+            "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
+            "enum": [
+                "config",
+                "diagnostic"
+            ],
+            "type": "string"
+        },
+        "icon": {
+            "description": "Icon to use for the entity created.",
+            "type": "string"
+        },
+        "json_attributes_template": {
+            "description": "Defines a template to extract the JSON dictionary from messages received on the json_attributes_topic.",
+            "type": "string"
+        },
+        "json_attributes_topic": {
+            "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
+            "type": "string"
+        },
+        "object_id": {
+            "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
+            "type": "string"
+        },
+        "unique_id": {
+            "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
+            "type": "string"
+        }
+    }
+}

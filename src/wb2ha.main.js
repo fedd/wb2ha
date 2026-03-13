@@ -397,7 +397,7 @@ function _process(deviceId, controlId) {
         },
         origin: {
             "name": "wb2ha",
-            "sw": "0.2",
+            "sw": "0.3",
             "url": "https://github.com/fedd/wb2ha"
         },
         availability_mode: "latest",
@@ -536,7 +536,7 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
         dest.type = src.type;
     }
     if (src.name) {
-        dest.name = src.name;
+        mod.name = src.name;
     }
     if (src.var) {
         if (!dest.var) {
@@ -555,14 +555,36 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
         }
     }
     if (src.mod) {
-        for (var mi in src.mod) {
-            mod[src.mod[mi].code] = src.mod[mi].value;
+        if (typeof src.mod === 'array' || src.mod instanceof Array) {
+            for (var mi in src.mod) {
+                mod[src.mod[mi].code] = src.mod[mi].value;
+            }
+        } else {
+            for (var type in src.mod) {
+                dest.type = type;
+                for (var prop in src.mod[type]) {
+                    mod[prop] = src.mod[type][prop];
+                }
+            }
         }
     }
     if (src.ifUnset) {
-        for (var mi in src.ifUnset) {
-            if (mod[src.ifUnset[mi].code] === undefined) {
-                mod[src.ifUnset[mi].code] = src.ifUnset[mi].value;
+        if (typeof src.ifUnset === 'array' || src.ifUnset instanceof Array) {
+            for (var mi in src.ifUnset) {
+                if (mod[src.ifUnset[mi].code] === undefined) {
+                    mod[src.ifUnset[mi].code] = src.ifUnset[mi].value;
+                }
+            }
+        } else {
+            for (var type in src.ifUnset) {
+                if (dest.type === undefined) {
+                    dest.type = type;
+                }
+                for (var prop in src.ifUnset[type]) {
+                    if (mod[prop] === undefined) {
+                        mod[prop] = src.ifUnset[type][prop];
+                    }
+                }
             }
         }
     }

@@ -122,26 +122,18 @@
                                 "type": "object",
                                 "_format": "grid",
                                 "properties": {
-                                    "type": {
-                                        "propertyOrder": 10,
-                                        "options": {
-                                            "grid_columns": 2,
-                                            "show_opt_in": true
-                                        },
-                                        "$ref": "#/definitions/type"
-                                    },
                                     "mod": {
                                         "options": {
-                                            "grid_columns": 7
+                                            "grid_columns": 8
                                         },
                                         "description": "Options for HA Discovery in Named Mod",
                                         "propertyOrder": 20,
-                                        "$ref": "#/definitions/mod"
+                                        "$ref": "#/definitions/typedMod"
                                     },
                                     "namedModifiers": {
                                         "_format": "table",
                                         "options": {
-                                            "grid_columns": 3,
+                                            "grid_columns": 4,
                                             "show_opt_in": true,
                                             "disable_collapse": true
                                         },
@@ -272,28 +264,29 @@
                 "disable_collapse": true
             },
             "properties": {
-                "type": {
-                    "propertyOrder": 10,
-                    "options": {
-                        "grid_columns": 2,
-                        "show_opt_in": true
-                    },
-                    "description": "",
-                    "$ref": "#/definitions/type"
-                },
                 "mod": {
                     "options": {
-                        "grid_columns": 7,
+                        "grid_columns": 8,
                         "show_opt_in": true
                     },
                     "description": "",
                     "propertyOrder": 20,
-                    "$ref": "#/definitions/mod"
+                    "$ref": "#/definitions/typedMod"
+                },
+                "ifUnset": {
+                    "options": {
+                        "grid_columns": 8,
+                        "show_opt_in": true
+                    },
+                    "title": "If Unset",
+                    "description": "Apply these options only if they are not set by other modifiers",
+                    "propertyOrder": 25,
+                    "$ref": "#/definitions/typedMod"
                 },
                 "namedModifiers": {
                     "_format": "table",
                     "options": {
-                        "grid_columns": 3,
+                        "grid_columns": 4,
                         "show_opt_in": true,
                         "disable_collapse": true
                     },
@@ -393,18 +386,10 @@
                     },
                     "type": "string"
                 },
-                "type": {
-                    "propertyOrder": 10,
-                    "options": {
-                        "grid_columns": 2,
-                        "show_opt_in": true
-                    },
-                    "$ref": "#/definitions/type"
-                },
                 "namedModifiers": {
                     "_format": "table",
                     "options": {
-                        "grid_columns": 4,
+                        "grid_columns": 5,
                         "show_opt_in": true,
                         "disable_collapse": true
                     },
@@ -420,11 +405,11 @@
                     },
                     "description": "Options for HA Discovery in control",
                     "propertyOrder": 50,
-                    "$ref": "#/definitions/mod"
+                    "$ref": "#/definitions/typedMod"
                 },
                 "var": {
                     "options": {
-                        "grid_columns": 4,
+                        "grid_columns": 5,
                         "show_opt_in": true,
                         "wb": {
                             "disable_panel": true
@@ -436,6 +421,30 @@
                     "$ref": "#/definitions/var"
                 }
             }
+        },
+        "typedMod": {
+            "options": {
+                "show_opt_in": true,
+                "disable_properties": true,
+                "grid_columns": 4,
+                "disable_edit_json": true,
+                "disable_collapse": true,
+                "collapsed": false
+            },
+            "propertyOrder": 1,
+            "title": "Type",
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/mod",
+                    "title": "Any",
+                    "default": [],
+                    "options": {
+                        "compact": false,
+                        "show_opt_in": true
+                    },
+                    "description": "Options for HA Discovery in control"
+                }
+            ]
         },
         "mod": {
             "title": "HA Discovery Payload",
@@ -474,25 +483,6 @@
                     }
                 }
             }
-        },
-        "type": {
-            "title": "Platform",
-            "description": "Replace HA Type to this",
-            "type": "string",
-            "enum": [
-                "button",
-                "cover",
-                "climate",
-                "sensor",
-                "binary_sensor",
-                "number",
-                "fan",
-                "text",
-                "select",
-                "switch",
-                "valve",
-                "light"
-            ]
         },
         "var": {
             "title": "Variables",
@@ -562,7 +552,8 @@
             "All devices and controls": "Опубликовать все устройства WirenBoard и их контролы",
             "Devices": "Устройства WirenBoard",
             "Select devices and controls": "Выберите устройства и контролы WirenBoard, которые надо опубликовать или исключить из публикации в HomeAssistant",
-            "Publish all devices and controls": "Если установлена галочка, все контролы всех устройств WirenBoard будут добавлены в Home Assistant, за исключением невыбранных контролов в устройствах, помеченных галочкой \"Все не добавлять\".<br/>Если галочка не установлена, будут добавлены только измененные контролы, а также все контролы в устройствах, помеченных галочкой \"Добавить все\""
+            "Publish all devices and controls": "Если установлена галочка, все контролы всех устройств WirenBoard будут добавлены в Home Assistant, за исключением невыбранных контролов в устройствах, помеченных галочкой \"Все не добавлять\".<br/>Если галочка не установлена, будут добавлены только измененные контролы, а также все контролы в устройствах, помеченных галочкой \"Добавить все\"",
+            "Apply these options only if they are not set by other modifiers": "Применить эти опции, только если они не установлены другими модификаторами"
         },
         "en": {
             "WB unit modifiers": "MQTT Discovery Options to add for a control with this measurement unit",

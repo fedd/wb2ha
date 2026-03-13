@@ -7,16 +7,16 @@
                 "code": "sound_level",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     },
                     "mod": [
                         {
@@ -34,16 +34,16 @@
                 "code": "concentration",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     },
                     "mod": [
                         {
@@ -61,16 +61,16 @@
                 "code": "rel_humidity",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     },
                     "mod": [
                         {
@@ -88,16 +88,16 @@
                 "code": "voltage",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     },
                     "mod": [
                         {
@@ -115,16 +115,16 @@
                 "code": "lux",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     },
                     "mod": [
                         {
@@ -142,16 +142,16 @@
                 "code": "temperature",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     },
                     "mod": [
                         {
@@ -169,16 +169,16 @@
                 "code": "range",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "slider"
+                        "mod": {
+                            "number": {
+                                "mode": "slider"
                             }
-                        ],
-                        "type": "number"
+                        }
                     }
                 }
             },
@@ -186,22 +186,18 @@
                 "code": "value",
                 "value": {
                     "readonly": {
-                        "type": "sensor",
-                        "ifUnset": [
-                            {
-                                "code": "unit_of_measurement",
-                                "value": "%"
+                        "ifUnset": {
+                            "sensor": {
+                                "unit_of_measurement": "%"
                             }
-                        ]
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "mode",
-                                "value": "box"
+                        "mod": {
+                            "number": {
+                                "mode": "box"
                             }
-                        ],
-                        "type": "number"
+                        }
                     }
                 }
             },
@@ -209,10 +205,14 @@
                 "code": "switch",
                 "value": {
                     "readonly": {
-                        "type": "binary_sensor"
+                        "mod": {
+                            "binary_sensor": {}
+                        }
                     },
                     "writable": {
-                        "type": "switch"
+                        "mod": {
+                            "switch": {}
+                        }
                     },
                     "mod": [
                         {
@@ -230,10 +230,14 @@
                 "code": "alarm",
                 "value": {
                     "readonly": {
-                        "type": "binary_sensor"
+                        "mod": {
+                            "binary_sensor": {}
+                        }
                     },
                     "writable": {
-                        "type": "switch"
+                        "mod": {
+                            "switch": {}
+                        }
                     },
                     "mod": [
                         {
@@ -255,16 +259,14 @@
                 "code": "text",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "platform",
-                                "value": "text"
-                            }
-                        ],
-                        "type": "text"
+                        "mod": {
+                            "text": {}
+                        }
                     }
                 }
             },
@@ -272,69 +274,42 @@
                 "code": "w1-id",
                 "value": {
                     "readonly": {
-                        "type": "sensor"
+                        "mod": {
+                            "sensor": {}
+                        }
                     },
                     "writable": {
-                        "mod": [
-                            {
-                                "code": "platform",
-                                "value": "text"
-                            }
-                        ],
-                        "type": "text"
+                        "mod": {
+                            "text": {}
+                        }
                     }
                 }
             },
             {
                 "code": "rgb",
                 "value": {
-                    "mod": [
-                        {
-                            "code": "command_topic",
-                            "value": "/devices/{device.id}/controls/RGB Strip/on"
-                        },
-                        {
-                            "code": "rgb_state_topic",
-                            "value": "/devices/{device.id}/controls/{control.id}"
-                        },
-                        {
-                            "code": "rgb_command_topic",
-                            "value": "/devices/{device.id}/controls/{control.id}/on"
-                        },
-                        {
-                            "code": "rgb_value_template",
-                            "value": "{{ value.split(';') | join(',') }}"
-                        },
-                        {
-                            "code": "rgb_command_template",
-                            "value": "{{ red }};{{ green }};{{ blue }}"
-                        },
-                        {
-                            "code": "state_topic",
-                            "value": "/devices/{device.id}/controls/RGB Strip"
-                        },
-                        {
-                            "code": "payload_on",
-                            "value": 1
-                        },
-                        {
-                            "code": "payload_off",
-                            "value": 0
+                    "mod": {
+                        "light": {
+                            "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
+                            "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
+                            "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                            "rgb_value_template": "{{ value.split(';') | join(',') }}",
+                            "rgb_command_template": "{{ red }};{{ green }};{{ blue }}",
+                            "state_topic": "/devices/{device.id}/controls/RGB Strip",
+                            "payload_on": "1",
+                            "payload_off": "0"
                         }
-                    ],
-                    "type": "light"
+                    }
                 }
             },
             {
                 "code": "pushbutton",
                 "value": {
-                    "mod": [
-                        {
-                            "code": "payload_press",
-                            "value": 1
+                    "mod": {
+                        "button": {
+                            "payload_press": "1"
                         }
-                    ],
-                    "type": "button"
+                    }
                 }
             }
         ],

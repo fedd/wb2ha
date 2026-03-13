@@ -1,0 +1,43 @@
+{
+    "Availability": {
+        "type": "object",
+        "properties": {
+            "topic": {
+                "description": "The MQTT topic subscribed to receive availability (online/offline) updates.",
+                "type": "string"
+            },
+            "payload_available": {
+                "description": "The payload that represents the available state.",
+                "type": "string"
+            },
+            "payload_not_available": {
+                "description": "The payload that represents the unavailable state.",
+                "type": "string"
+            },
+            "value_template": {
+                "description": "Defines a template to extract the value for payload_available and payload_not_available.",
+                "type": "string"
+            }
+        },
+        "additionalProperties": false,
+        "required": [
+            "topic"
+        ]
+    },
+    "ColorMode": {
+        "description": "From: https://github.com/home-assistant/core/blob/dev/homeassistant/components/light/const.py",
+        "enum": [
+            "brightness",
+            "color_temp",
+            "hs",
+            "onoff",
+            "rgb",
+            "rgbw",
+            "rgbww",
+            "unknown",
+            "white",
+            "xy"
+        ],
+        "type": "string"
+    }
+}
