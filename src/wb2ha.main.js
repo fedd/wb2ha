@@ -557,13 +557,62 @@ function _copyTypeMod(dest, mod, src, includeNamedModifiers) {
     if (src.mod) {
         if (typeof src.mod === 'array' || src.mod instanceof Array) {
             for (var mi in src.mod) {
-                mod[src.mod[mi].code] = src.mod[mi].value;
+
+                if (src.mod[mi].code === "availability") {
+
+                    if (src.mod[mi].value !== 'array' && !src.mod[mi].value instanceof Array) {
+                        src.mod[mi].value = [src.mod[mi].value];
+                    }
+
+
+                    if (typeof mod[src.mod[mi].code] === 'array' || mod[src.mod[mi].code] instanceof Array) {
+
+                    } else if (mod[src.mod[mi].code] !== undefined) {
+                        mod[src.mod[mi].code] = [
+                            mod[src.mod[mi].code]
+                        ];
+                    } else {
+                        mod[src.mod[mi].code] = [];
+                    }
+
+                    for (var ii in src.mod[mi].value) {
+                        mod[src.mod[mi].code].push(src.mod[mi].value[ii]);
+                    }
+
+                } else {
+                    mod[src.mod[mi].code] = src.mod[mi].value;
+                }
+
             }
         } else {
             for (var type in src.mod) {
                 dest.type = type;
                 for (var prop in src.mod[type]) {
-                    mod[prop] = src.mod[type][prop];
+
+                    if (prop === "availability") {
+
+                        if (src.mod[type][prop] !== 'array' && !src.mod[type][prop] instanceof Array) {
+                            src.mod[type][prop] = [src.mod[type][prop]];
+                        }
+
+
+                        if (typeof mod[prop] === 'array' || mod[prop] instanceof Array) {
+                        } else if (mod[prop] !== undefined) {
+                            mod[prop] = [
+                                mod[prop]
+                            ];
+                        } else {
+                            mod[prop] = [];
+                        }
+
+                        for (var iii in src.mod[type][prop]) {
+                            mod[prop].push(src.mod[type][prop][iii]);
+                        }
+
+                    } else {
+                        mod[prop] = src.mod[type][prop];
+                    }
+
                 }
             }
         }
