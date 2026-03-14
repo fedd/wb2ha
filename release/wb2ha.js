@@ -1100,7 +1100,7 @@ var SCHEMA = {
             "additionalProperties": false,
             "default": {
                 "controls": {},
-                "reverse": true
+                "reverse": false
             },
             "properties": {
                 "controls": {
@@ -1282,13 +1282,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT alarm.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "payload_arm_away": {
                                     "description": "The payload to set armed-away mode on your Alarm Panel.",
                                     "type": "string",
@@ -1334,25 +1327,6 @@ var SCHEMA = {
                                 "payload_trigger": {
                                     "description": "The payload to trigger the alarm on your Alarm Panel.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level of the state topic.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "Set the retain flag for data from the alarm panel.\nRetain is enabled by default.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -1447,133 +1421,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -1608,20 +1455,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -1717,16 +1550,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT binary sensor. Can be set to null if only the device name is relevant.",
-                                    "type": [
-                                        "null",
-                                        "string"
-                                    ],
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "off_delay": {
                                     "type": "integer",
                                     "minimum": 0,
@@ -1753,18 +1576,6 @@ var SCHEMA = {
                                     "description": "Must be binary_sensor. Only allowed and required in MQTT auto discovery device messages.",
                                     "const": "binary_sensor",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level of the state topic.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -1837,133 +1648,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -1998,20 +1682,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -2062,35 +1732,9 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT button.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "payload_press": {
                                     "description": "The payload to send to trigger the button.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -2149,133 +1793,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -2314,20 +1831,6 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
                             "_format": "grid"
@@ -2353,13 +1856,6 @@ var SCHEMA = {
                             "type": "object",
                             "description": "The mqtt camera platform allows you to integrate the content of an image file sent through MQTT into Home Assistant as a camera.\nhttps://www.home-assistant.io/integrations/camera.mqtt/",
                             "properties": {
-                                "name": {
-                                    "description": "The name of the MQTT camera.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "topic": {
                                     "description": "The MQTT topic to subscribe to.",
                                     "type": "string",
@@ -2421,133 +1917,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -2582,20 +1951,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -2794,13 +2149,6 @@ var SCHEMA = {
                                         "collapsed": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the HVAC.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "payload_off": {
                                     "description": "The payload that represents disabled state.",
                                     "type": "string",
@@ -2874,25 +2222,6 @@ var SCHEMA = {
                                         "disable_properties": true,
                                         "disable_edit_json": true,
                                         "collapsed": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "Defines if published messages should have the retain flag set.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
                                     }
                                 },
                                 "swing_mode_command_template": {
@@ -3100,133 +2429,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -3261,20 +2463,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -3325,13 +2513,6 @@ var SCHEMA = {
                                         "shutter",
                                         "window"
                                     ],
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "name": {
-                                    "description": "The name of the MQTT cover.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -3389,25 +2570,6 @@ var SCHEMA = {
                                 "position_topic": {
                                     "description": "The MQTT topic subscribed to receive cover position messages. If position_topic is set state_topic is ignored.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "Defines if published messages should have the retain flag set.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -3592,133 +2754,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -3753,20 +2788,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -3831,18 +2852,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "source_type": {
                                     "description": "Attribute of a device tracker that affects state when being used to track a person. Valid options are gps, router, bluetooth, or bluetooth_le.",
                                     "enum": [
@@ -3851,27 +2860,6 @@ var SCHEMA = {
                                         "gps",
                                         "router"
                                     ],
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "name": {
-                                    "description": "The name of the MQTT device_tracker.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "Used instead of `name` for automatic generation of `entity_id`.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this device_tracker. If two device_trackers have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -3952,133 +2940,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -4151,13 +3012,6 @@ var SCHEMA = {
                                 },
                                 "command_template": {
                                     "description": "The template used for the command payload.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "name": {
-                                    "description": "The name of the MQTT fan.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -4338,25 +3192,6 @@ var SCHEMA = {
                                         "collapsed": true
                                     }
                                 },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "Defines if published messages should have the retain flag set.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "speed_range_min": {
                                     "type": "integer",
                                     "minimum": 0,
@@ -4441,133 +3276,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -4602,20 +3310,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -4775,13 +3469,6 @@ var SCHEMA = {
                                         "collapsed": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the humidifier.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "optimistic": {
                                     "description": "Flag that defines if humidifier works in optimistic mode.",
                                     "type": "boolean",
@@ -4813,25 +3500,6 @@ var SCHEMA = {
                                 "payload_reset_mode": {
                                     "description": "A special payload that resets the `mode` state attribute to an `unknown` state when received at the `mode_state_topic`.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -4932,133 +3600,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -5097,20 +3638,6 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
                             "_format": "grid"
@@ -5136,13 +3663,6 @@ var SCHEMA = {
                             "type": "object",
                             "description": "The mqtt image platform allows you to integrate the content of an image file sent through MQTT into Home Assistant as an image.\nhttps://www.home-assistant.io/integrations/image.mqtt",
                             "properties": {
-                                "name": {
-                                    "description": "The name of the MQTT image.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "content_type": {
                                     "description": "The content type of an image data message received on image_topic.",
                                     "type": "string",
@@ -5232,133 +3752,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -5397,20 +3790,6 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
                             "_format": "grid"
@@ -5423,7 +3802,7 @@ var SCHEMA = {
                 },
                 {
                     "type": "object",
-                    "title": "light",
+                    "title": "light basic",
                     "properties": {
                         "light": {
                             "title": " ",
@@ -5439,14 +3818,12 @@ var SCHEMA = {
                                 "schema": {
                                     "description": "The mqtt light platform with default schema lets you control your MQTT enabled lights. It supports setting brightness, color temperature, effects, flashing, on/off, RGB colors, transitions, XY colors and white values.",
                                     "type": "string",
-                                    "enum": [
-                                        "default",
-                                        "json",
-                                        "template"
-                                    ],
                                     "options": {
-                                        "show_opt_in": true
-                                    }
+                                        "hidden": true
+                                    },
+                                    "enum": [
+                                        "basic"
+                                    ]
                                 },
                                 "brightness_command_topic": {
                                     "description": "The MQTT topic to publish commands to change the light’s brightness.",
@@ -5598,13 +3975,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT light.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "on_command_type": {
                                     "description": "Defines when on the payload_on is sent. Using last (the default) will send any style (brightness, color, etc) topics first and then a payload_on to the command_topic.",
                                     "type": "string",
@@ -5629,25 +3999,6 @@ var SCHEMA = {
                                 "payload_on": {
                                     "description": "The payload that represents enabled state.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "Defines if published messages should have the retain flag set.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -5783,132 +4134,280 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
+                                "enabled_by_default": {
+                                    "description": "Flag which defines if the entity should be enabled when first added.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "entity_category": {
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
+                                    "enum": [
+                                        "config",
+                                        "diagnostic"
+                                    ],
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "icon": {
+                                    "description": "Icon to use for the entity created.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "json_attributes_template": {
+                                    "description": "Defines a template to extract the JSON dictionary from messages received on the json_attributes_topic.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "json_attributes_topic": {
+                                    "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                }
+                            },
+                            "_format": "grid",
+                            "default": {
+                                "schema": "basic"
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "default": {
+                        "light": {
+                            "schema": "basic"
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "light json",
+                    "properties": {
+                        "light": {
+                            "title": " ",
+                            "options": {
+                                "disable_properties": true,
+                                "disable_edit_json": true,
+                                "disable_collapse": false,
+                                "collapsed": true
+                            },
+                            "type": "object",
+                            "description": "The mqtt light platform lets you control your MQTT enabled lights through one of the supported message schemas, default, json or template.\nhttps://www.home-assistant.io/integrations/light.mqtt/",
+                            "properties": {
+                                "schema": {
+                                    "description": "The mqtt light platform with default schema lets you control your MQTT enabled lights. It supports setting brightness, color temperature, effects, flashing, on/off, RGB colors, transitions, XY colors and white values.",
+                                    "type": "string",
+                                    "options": {
+                                        "hidden": true
+                                    },
+                                    "enum": [
+                                        "json"
+                                    ]
+                                },
+                                "brightness": {
+                                    "description": "Flag that defines if the light supports brightness.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "brightness_scale": {
+                                    "type": "integer",
+                                    "description": "Defines the maximum brightness value (i.e., 100%) of the MQTT device.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "color_mode": {
+                                    "description": "Flag that defines if the light supports color modes.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "color_temp": {
+                                    "description": "Flag that defines if the light supports color temperature.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "command_topic": {
+                                    "description": "The MQTT topic to publish commands to change the switch state.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "effect": {
+                                    "description": "Flag that defines if the light supports effects.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "effect_list": {
+                                    "description": "The list of effects the light supports.",
+                                    "anyOf": [
+                                        {
                                             "type": "array",
                                             "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
+                                                "type": "string"
                                             }
                                         },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
+                                        {
+                                            "type": "string"
                                         }
+                                    ],
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "flash_time_long": {
+                                    "type": "integer",
+                                    "description": "The duration, in seconds, of a “long” flash.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "flash_time_short": {
+                                    "type": "integer",
+                                    "description": "The duration, in seconds, of a “short” flash.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "hs": {
+                                    "description": "Flag that defines if the light supports HS colors.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "max_mireds": {
+                                    "type": "integer",
+                                    "description": "The maximum color temperature in mireds.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "min_mireds": {
+                                    "type": "integer",
+                                    "description": "The minimum color temperature in mireds.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "optimistic": {
+                                    "description": "Flag that defines if light works in optimistic mode.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "rgb": {
+                                    "description": "Flag that defines if the light supports RGB colors.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "state_topic": {
+                                    "description": "The MQTT topic subscribed to receive state updates.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "supported_color_modes": {
+                                    "description": "A list of color modes supported by the light.",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ColorMode",
+                                        "_format": "wb-object"
                                     },
-                                    "additionalProperties": false,
                                     "options": {
                                         "show_opt_in": true,
                                         "disable_properties": true,
                                         "disable_edit_json": true,
                                         "collapsed": true
+                                    }
+                                },
+                                "white_value": {
+                                    "description": "Flag that defines if the light supports white values.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "xy": {
+                                    "description": "Flag that defines if the light supports XY colors.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "availability": {
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Availability",
+                                        "_format": "wb-object"
                                     },
-                                    "_format": "grid"
+                                    "options": {
+                                        "show_opt_in": true,
+                                        "disable_properties": true,
+                                        "disable_edit_json": true,
+                                        "collapsed": true
+                                    }
+                                },
+                                "availability_mode": {
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
+                                    "enum": [
+                                        "all",
+                                        "any",
+                                        "latest"
+                                    ],
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "availability_template": {
+                                    "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "availability_topic": {
+                                    "description": "The MQTT topic subscribed to receive availability (online/offline) updates.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "payload_available": {
+                                    "description": "The payload that represents the available state.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "payload_not_available": {
+                                    "description": "The payload that represents the unavailable state.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
                                 },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
@@ -5948,104 +4447,45 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
+                                }
+                            },
+                            "_format": "grid",
+                            "default": {
+                                "schema": "json"
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "default": {
+                        "light": {
+                            "schema": "json"
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "title": "light template",
+                    "properties": {
+                        "light": {
+                            "title": " ",
+                            "options": {
+                                "disable_properties": true,
+                                "disable_edit_json": true,
+                                "disable_collapse": false,
+                                "collapsed": true
+                            },
+                            "type": "object",
+                            "description": "The mqtt light platform lets you control your MQTT enabled lights through one of the supported message schemas, default, json or template.\nhttps://www.home-assistant.io/integrations/light.mqtt/",
+                            "properties": {
+                                "schema": {
+                                    "description": "The mqtt light platform with default schema lets you control your MQTT enabled lights. It supports setting brightness, color temperature, effects, flashing, on/off, RGB colors, transitions, XY colors and white values.",
                                     "type": "string",
                                     "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "brightness": {
-                                    "description": "Flag that defines if the light supports brightness.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "color_mode": {
-                                    "description": "Flag that defines if the light supports color modes.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "color_temp": {
-                                    "description": "Flag that defines if the light supports color temperature.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "effect": {
-                                    "description": "Flag that defines if the light supports effects.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "flash_time_long": {
-                                    "type": "integer",
-                                    "description": "The duration, in seconds, of a “long” flash.",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "flash_time_short": {
-                                    "type": "integer",
-                                    "description": "The duration, in seconds, of a “short” flash.",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "hs": {
-                                    "description": "Flag that defines if the light supports HS colors.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "rgb": {
-                                    "description": "Flag that defines if the light supports RGB colors.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "supported_color_modes": {
-                                    "description": "A list of color modes supported by the light.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/ColorMode",
-                                        "_format": "wb-object"
+                                        "hidden": true
                                     },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "white_value": {
-                                    "description": "Flag that defines if the light supports white values.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "xy": {
-                                    "description": "Flag that defines if the light supports XY colors.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
+                                    "enum": [
+                                        "template"
+                                    ]
                                 },
                                 "blue_template": {
                                     "description": "Template to extract blue color from the state payload value.",
@@ -6082,6 +4522,30 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
+                                "command_topic": {
+                                    "description": "The MQTT topic to publish commands to change the switch state.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "effect_list": {
+                                    "description": "The list of effects the light supports.",
+                                    "anyOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
                                 "effect_template": {
                                     "description": "Template to extract effect from the state payload value.",
                                     "type": "string",
@@ -6092,6 +4556,27 @@ var SCHEMA = {
                                 "green_template": {
                                     "description": "Template to extract green color from the state payload value.",
                                     "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "max_mireds": {
+                                    "type": "integer",
+                                    "description": "The maximum color temperature in mireds.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "min_mireds": {
+                                    "type": "integer",
+                                    "description": "The minimum color temperature in mireds.",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "optimistic": {
+                                    "description": "Flag that defines if light works in optimistic mode.",
+                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -6109,14 +4594,119 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
+                                },
+                                "state_topic": {
+                                    "description": "The MQTT topic subscribed to receive state updates.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "availability": {
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Availability",
+                                        "_format": "wb-object"
+                                    },
+                                    "options": {
+                                        "show_opt_in": true,
+                                        "disable_properties": true,
+                                        "disable_edit_json": true,
+                                        "collapsed": true
+                                    }
+                                },
+                                "availability_mode": {
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
+                                    "enum": [
+                                        "all",
+                                        "any",
+                                        "latest"
+                                    ],
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "availability_template": {
+                                    "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "availability_topic": {
+                                    "description": "The MQTT topic subscribed to receive availability (online/offline) updates.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "payload_available": {
+                                    "description": "The payload that represents the available state.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "payload_not_available": {
+                                    "description": "The payload that represents the unavailable state.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "enabled_by_default": {
+                                    "description": "Flag which defines if the entity should be enabled when first added.",
+                                    "type": "boolean",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "entity_category": {
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
+                                    "enum": [
+                                        "config",
+                                        "diagnostic"
+                                    ],
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "icon": {
+                                    "description": "Icon to use for the entity created.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "json_attributes_template": {
+                                    "description": "Defines a template to extract the JSON dictionary from messages received on the json_attributes_topic.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
+                                },
+                                "json_attributes_topic": {
+                                    "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
+                                    "type": "string",
+                                    "options": {
+                                        "show_opt_in": true
+                                    }
                                 }
                             },
-                            "_format": "grid"
+                            "_format": "grid",
+                            "default": {
+                                "schema": "template"
+                            }
                         }
                     },
                     "additionalProperties": false,
                     "default": {
-                        "light": {}
+                        "light": {
+                            "schema": "template"
+                        }
                     }
                 },
                 {
@@ -6141,13 +4731,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT lock.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "optimistic": {
                                     "description": "Flag that defines if lock works in optimistic mode.",
                                     "type": "boolean",
@@ -6165,25 +4748,6 @@ var SCHEMA = {
                                 "payload_unlock": {
                                     "description": "The value that represents the lock to be in unlocked state.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -6270,133 +4834,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -6431,20 +4868,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -6506,34 +4929,8 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT number.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "optimistic": {
                                     "description": "Flag that defines if the number works in optimistic mode.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
                                     "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
@@ -6621,133 +5018,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -6786,20 +5056,6 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
                             "_format": "grid"
@@ -6832,13 +5088,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT scene.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "optimistic": {
                                     "description": "Flag that defines if the scene works in optimistic mode.",
                                     "type": "boolean",
@@ -6849,25 +5098,6 @@ var SCHEMA = {
                                 "payload": {
                                     "description": "The payload that represents the scene.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -6940,133 +5170,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -7105,20 +5208,6 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
                             "_format": "grid"
@@ -7151,13 +5240,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT select.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "optimistic": {
                                     "description": "Flag that defines the select works in optimistic mode.",
                                     "type": "boolean",
@@ -7177,25 +5259,6 @@ var SCHEMA = {
                                         "disable_properties": true,
                                         "disable_edit_json": true,
                                         "collapsed": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level of the state topic.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
                                     }
                                 },
                                 "state_topic": {
@@ -7266,133 +5329,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -7427,20 +5363,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -7568,32 +5490,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "name": {
-                                    "description": "The name of the siren.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "availability": {
                                     "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
                                     "type": "array",
@@ -7648,133 +5544,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -7809,20 +5578,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -7959,16 +5714,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT sensor. Can be set to null if only the device name is relevant.",
-                                    "type": [
-                                        "null",
-                                        "string"
-                                    ],
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "options": {
                                     "description": "List of allowed sensor state value. An empty list is not allowed. The sensor's device_class must be set to enum.",
                                     "type": "array",
@@ -7987,18 +5732,6 @@ var SCHEMA = {
                                     "description": "Must be sensor. Only allowed and required in MQTT auto discovery device messages.",
                                     "const": "sensor",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level of the state topic.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -8097,133 +5830,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -8258,20 +5864,6 @@ var SCHEMA = {
                                 },
                                 "json_attributes_topic": {
                                     "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -8322,13 +5914,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "name": {
-                                    "description": "The name of the MQTT switch.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
                                 "optimistic": {
                                     "description": "Flag that defines if switch works in optimistic mode.",
                                     "type": "boolean",
@@ -8346,25 +5931,6 @@ var SCHEMA = {
                                 "payload_on": {
                                     "description": "The payload that represents the on state.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -8451,133 +6017,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -8616,20 +6055,6 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
                             "_format": "grid"
@@ -8642,7 +6067,7 @@ var SCHEMA = {
                 },
                 {
                     "type": "object",
-                    "title": "vacuum",
+                    "title": "vacuum state",
                     "properties": {
                         "vacuum": {
                             "title": " ",
@@ -8658,10 +6083,12 @@ var SCHEMA = {
                                 "schema": {
                                     "description": "The schema to use. Must be state to select the state schema.",
                                     "type": "string",
-                                    "const": "state",
                                     "options": {
-                                        "show_opt_in": true
-                                    }
+                                        "hidden": true
+                                    },
+                                    "enum": [
+                                        "state"
+                                    ]
                                 },
                                 "command_topic": {
                                     "description": "The MQTT topic to publish commands to control the vacuum.",
@@ -8693,13 +6120,6 @@ var SCHEMA = {
                                 },
                                 "fan_speed_topic": {
                                     "description": "The MQTT topic subscribed to receive fan speed values from the vacuum.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "name": {
-                                    "description": "The name of the MQTT vacuum.",
                                     "type": "string",
                                     "options": {
                                         "show_opt_in": true
@@ -8743,25 +6163,6 @@ var SCHEMA = {
                                 "payload_stop": {
                                     "description": "The payload to send to the command_topic to stop the vacuum.",
                                     "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level of the state topic.",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
                                     }
@@ -8855,133 +6256,6 @@ var SCHEMA = {
                                         "show_opt_in": true
                                     }
                                 },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
                                 "enabled_by_default": {
                                     "description": "Flag which defines if the entity should be enabled when first added.",
                                     "type": "boolean",
@@ -9020,364 +6294,19 @@ var SCHEMA = {
                                     "options": {
                                         "show_opt_in": true
                                     }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
                                 }
                             },
-                            "_format": "grid"
+                            "_format": "grid",
+                            "default": {
+                                "schema": "state"
+                            }
                         }
                     },
                     "additionalProperties": false,
                     "default": {
-                        "vacuum": {}
-                    }
-                },
-                {
-                    "type": "object",
-                    "title": "text",
-                    "properties": {
-                        "text": {
-                            "title": " ",
-                            "options": {
-                                "disable_properties": true,
-                                "disable_edit_json": true,
-                                "disable_collapse": false,
-                                "collapsed": true
-                            },
-                            "type": "object",
-                            "properties": {
-                                "mode": {
-                                    "description": "The mode off the text entity. Must be either text or password.",
-                                    "enum": [
-                                        "text",
-                                        "password"
-                                    ],
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "command_topic": {
-                                    "description": "The MQTT topic to publish commands to change the text state.\nhttps://www.home-assistant.io/integrations/number.mqtt/#command_topic",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "pattern": {
-                                    "description": "A valid regular expression the text being set or received must match with.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "max": {
-                                    "description": "The maximum size of a text being set or received (maximum is 255).",
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "min": {
-                                    "description": "The minimum size of a text being set or received.",
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "name": {
-                                    "description": "The name of the MQTT text.\nhttps://www.home-assistant.io/integrations/number.mqtt#name",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "qos": {
-                                    "description": "The maximum QoS level to be used when receiving and publishing messages.\nhttps://www.home-assistant.io/integrations/number.mqtt/#qos",
-                                    "enum": [
-                                        0,
-                                        1,
-                                        2
-                                    ],
-                                    "type": "number",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "retain": {
-                                    "description": "If the published message should have the retain flag on or not.\nhttps://www.home-assistant.io/integrations/number.mqtt/#retain",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "state_topic": {
-                                    "description": "The MQTT topic subscribed to receive state updates.\nhttps://www.home-assistant.io/integrations/number.mqtt/#state_topic",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "value_template": {
-                                    "description": "Defines a template to extract the text state value from the payload received on state_topic.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "availability_template": {
-                                    "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "availability_topic": {
-                                    "description": "The MQTT topic subscribed to receive availability (online/offline) updates.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "payload_available": {
-                                    "description": "The payload that represents the available state.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "payload_not_available": {
-                                    "description": "The payload that represents the unavailable state.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "device": {
-                                    "description": "Information about the device this sensor is a part of to tie it into the device registry. Only works through MQTT discovery and when unique_id is set.",
-                                    "type": "object",
-                                    "properties": {
-                                        "configuration_url": {
-                                            "description": "A link to the webpage that can manage the configuration of this device. Can be either an http://, https:// or an internal homeassistant:// URL",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "connections": {
-                                            "description": "A list of connections of the device to the outside world as a list of tuples.",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_type"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "title": "connection_identifier"
-                                                    }
-                                                ],
-                                                "minItems": 2,
-                                                "maxItems": 2,
-                                                "_format": "wb-object"
-                                            },
-                                            "options": {
-                                                "show_opt_in": true,
-                                                "disable_properties": true,
-                                                "disable_edit_json": true,
-                                                "collapsed": true
-                                            }
-                                        },
-                                        "hw_version": {
-                                            "description": "The hardware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "identifiers": {
-                                            "description": "A list of IDs that uniquely identify the device. For example a serial number.",
-                                            "anyOf": [
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "string"
-                                                }
-                                            ],
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "manufacturer": {
-                                            "description": "The manufacturer of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model": {
-                                            "description": "The model of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "model_id": {
-                                            "description": "The model identifier of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "name": {
-                                            "description": "The name of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "serial_number": {
-                                            "description": "The serial number of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "suggested_area": {
-                                            "description": "Suggest an area if the device isn’t in one yet.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "sw_version": {
-                                            "description": "The firmware version of the device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        },
-                                        "via_device": {
-                                            "description": "Identifier of a device that routes messages between this device and Home Assistant. Examples of such devices are hubs, or parent devices of a sub-device.",
-                                            "type": "string",
-                                            "options": {
-                                                "show_opt_in": true
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
-                                "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "icon": {
-                                    "description": "Icon to use for the entity created.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "json_attributes_template": {
-                                    "description": "Defines a template to extract the JSON dictionary from messages received on the json_attributes_topic.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "json_attributes_topic": {
-                                    "description": "The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "object_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                },
-                                "unique_id": {
-                                    "description": "An ID that uniquely identifies this sensor. If two sensors have the same unique ID, Home Assistant will raise an exception.",
-                                    "type": "string",
-                                    "options": {
-                                        "show_opt_in": true
-                                    }
-                                }
-                            },
-                            "_format": "grid"
+                        "vacuum": {
+                            "schema": "state"
                         }
-                    },
-                    "additionalProperties": false,
-                    "default": {
-                        "text": {}
                     }
                 }
             ]
@@ -9867,6 +6796,7 @@ var CONFIG = {
                 "value": {
                     "mod": {
                         "light": {
+                            "schema": "basic",
                             "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
                             "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
                             "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
@@ -9899,7 +6829,42 @@ var CONFIG = {
                 "reverse": false
             }
         },
-        "namedModifiers": [],
+        "namedModifiers": [
+            {
+                "code": "zigbeeSwitchLight",
+                "value": {
+                    "mod": {
+                        "light": {
+                            "availability": [
+                                {
+                                    "topic": "zigbee2mqtt/bridge/state",
+                                    "value_template": "{{ value_json.state }}"
+                                }
+                            ],
+                            "command_topic": "zigbee2mqtt/{device.id}/set",
+                            "payload_off": "{ \"{control.id}\": \"OFF\" }",
+                            "payload_on": "{ \"{control.id}\": \"ON\" }",
+                            "schema": "basic",
+                            "state_topic": "zigbee2mqtt/{device.id}",
+                            "state_value_template": "{ \"{control.id}\": \"{{ value_json.{control.id} }}\" }"
+                        }
+                    }
+                }
+            },
+            {
+                "code": "wbLedSwitchLight",
+                "value": {
+                    "mod": {
+                        "light": {
+                            "brightness_command_topic": "/devices/{device.id}/controls/{control.id} Brightness/on",
+                            "brightness_scale": 100,
+                            "brightness_state_topic": "/devices/{device.id}/controls/{control.id} Brightness",
+                            "schema": "basic"
+                        }
+                    }
+                }
+            }
+        ],
         "units": [
             {
                 "code": "ppb",

@@ -290,6 +290,7 @@
                 "value": {
                     "mod": {
                         "light": {
+                            "schema": "basic",
                             "command_topic": "/devices/{device.id}/controls/RGB Strip/on",
                             "rgb_state_topic": "/devices/{device.id}/controls/{control.id}",
                             "rgb_command_topic": "/devices/{device.id}/controls/{control.id}/on",
@@ -322,7 +323,42 @@
                 "reverse": false
             }
         },
-        "namedModifiers": [],
+        "namedModifiers": [
+            {
+                "code": "zigbeeSwitchLight",
+                "value": {
+                    "mod": {
+                        "light": {
+                            "availability": [
+                                {
+                                    "topic": "zigbee2mqtt/bridge/state",
+                                    "value_template": "{{ value_json.state }}"
+                                }
+                            ],
+                            "command_topic": "zigbee2mqtt/{device.id}/set",
+                            "payload_off": "{ \"{control.id}\": \"OFF\" }",
+                            "payload_on": "{ \"{control.id}\": \"ON\" }",
+                            "schema": "basic",
+                            "state_topic": "zigbee2mqtt/{device.id}",
+                            "state_value_template": "{ \"{control.id}\": \"{{ value_json.{control.id} }}\" }"
+                        }
+                    }
+                }
+            },
+            {
+                "code": "wbLedSwitchLight",
+                "value": {
+                    "mod": {
+                        "light": {
+                            "brightness_command_topic": "/devices/{device.id}/controls/{control.id} Brightness/on",
+                            "brightness_scale": 100,
+                            "brightness_state_topic": "/devices/{device.id}/controls/{control.id} Brightness",
+                            "schema": "basic"
+                        }
+                    }
+                }
+            }
+        ],
         "units": [
             {
                 "code": "ppb",

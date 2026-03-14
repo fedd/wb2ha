@@ -3,6 +3,15 @@
 const fs = require('fs');
 const path = require('path');
 
+const unwanted = [
+    "unique_id",
+    "device",
+    "name",
+    "object_id",
+    "qos",
+    "retain"
+].sort();
+
 function _findRefs(anyofArr) {
     const ret = [];
     for (const i in anyofArr) {
@@ -20,7 +29,11 @@ function _decorateObject(obj) {
             obj.properties[prop].options = {};
         }
 
-        obj.properties[prop].options.show_opt_in = true;
+        if (prop !== "schema") {
+            obj.properties[prop].options.show_opt_in = true;
+        } else {
+            obj.properties[prop].options.hidden = true;
+        }
 
         if (obj.properties[prop].type) {
             if (obj.properties[prop].type === "object") {
@@ -78,65 +91,74 @@ try {
 
     for (const platform in platforms) {
 
-        // take the missing properties from the additional
-        const propertyHolder = additional[platform] ? additional[platform] : {};
+        const refs = _findRefs(platforms[platform].anyOf);
 
-        {
-            const refs = _findRefs(platforms[platform].anyOf);
+        for (const defI in refs) {
 
-            for (const defI in refs) {
+            // take the missing properties from the additional
+            const propertyHolder = additional[platform] ? additional[platform] : {};
 
-                for (const prop in haSchema.definitions[refs[defI]].properties) {
-                    if (!propertyHolder[prop]) {
-                        propertyHolder[prop] = haSchema.definitions[refs[defI]].properties[prop];
-                    } else {
-                        // multischema
-                        if (haSchema.definitions[refs[defI]].properties[prop].const !== undefined) {
-                            if (!propertyHolder[prop].enum) {
-                                propertyHolder[prop].enum = [
-                                    propertyHolder[prop].const,
-                                    haSchema.definitions[refs[defI]].properties[prop].const
-                                ];
-                                delete propertyHolder[prop].const;
-                            } else {
-                                propertyHolder[prop].enum.push(haSchema.definitions[refs[defI]].properties[prop].const);
-                            }
-                        }
-                    }
+            for (const prop in haSchema.definitions[refs[defI]].properties) {
 
-                    if (propertyHolder[prop].description) {
-                        propertyHolder[prop].description =
-                                propertyHolder[prop].description.replace(/\nhttps?:\/\/\S+/g, "");
-                    }
+                if (unwanted.includes(prop)) {
+                    continue;
+                }
+
+                if (!propertyHolder[prop]) {
+                    propertyHolder[prop] = haSchema.definitions[refs[defI]].properties[prop];
+                }
+
+                if (propertyHolder[prop].description) {
+                    propertyHolder[prop].description =
+                            propertyHolder[prop].description.replace(/\nhttps?:\/\/\S+/g, "");
                 }
             }
+
+            const ret = {
+                type: "object",
+                title: platform,
+                properties: {},
+                additionalProperties: false,
+                "default": {}
+            };
+            ret["default"][platform] = {};
+            ret.properties[platform] = {
+                title: " ",
+                options: {
+                    "disable_properties": true,
+                    "disable_edit_json": true,
+                    "disable_collapse": false,
+                    "collapsed": true
+                },
+                type: "object",
+                description: platforms[platform].description,
+                properties: propertyHolder,
+                _format: "grid"
+            };
+
+            _decorateObject(ret.properties[platform]);
+
+            // multiple schemas
+            if (ret.properties[platform].properties.schema) {
+
+                // TODO: find the modern json schema, until then rename the light "default" schema to "basic"
+                if (platform === "light" && ret.properties[platform].properties.schema.const === "default") {
+                    ret.properties[platform].properties.schema.const = "basic";
+                }
+
+                ret.properties[platform]["default"] = {
+                    schema: ret.properties[platform].properties.schema.const
+                };
+                ret["default"][platform].schema = ret.properties[platform].properties.schema.const;
+                ret.title = platform + " " + ret["default"][platform].schema;
+                ret.properties[platform].properties.schema.enum = [ret.properties[platform].properties.schema.const];
+                delete ret.properties[platform].properties.schema.const;
+            }
+
+            typedModOneOfs.push(ret);
         }
 
-        const ret = {
-            type: "object",
-            title: platform,
-            properties: {},
-            additionalProperties: false,
-            "default": {}
-        };
-        ret["default"][platform] = {};
-        ret.properties[platform] = {
-            title: " ",
-            options: {
-                "disable_properties": true,
-                "disable_edit_json": true,
-                "disable_collapse": false,
-                "collapsed": true
-            },
-            type: "object",
-            description: platforms[platform].description,
-            properties: propertyHolder,
-            _format: "grid"
-        };
 
-        _decorateObject(ret.properties[platform]);
-
-        typedModOneOfs.push(ret);
     }
 
     const newDefs = {};
