@@ -29,27 +29,57 @@ function _decorateObject(obj) {
             obj.properties[prop].options = {};
         }
 
+        let our = obj.properties[prop];
         if (prop !== "schema") {
+
+            if (our.type !== "string" || our.enum) {
+                
+                obj.properties[prop] = {
+                    options: our.options,
+                    oneOf: [
+                        our,
+                        {
+                            title: our.type + " {var}",
+                            type: "string",
+                            pattern: "^\\{\\S+\\}$"
+                        }
+                    ]
+                }
+                delete our.options;
+                if (our.description) {
+                    obj.properties[prop].description = our.description;
+                    delete our.description;
+                }
+
+            }
+
             obj.properties[prop].options.show_opt_in = true;
+
         } else {
-            obj.properties[prop].options.hidden = true;
+            our.options.hidden = true;
         }
 
-        if (obj.properties[prop].type) {
-            if (obj.properties[prop].type === "object") {
-                obj.properties[prop].options.disable_properties = true;
-                obj.properties[prop].options.disable_edit_json = true;
-                obj.properties[prop]._format = "grid";
-                obj.properties[prop].options.collapsed = true;
-                _decorateObject(obj.properties[prop]);
-            } else if (obj.properties[prop].type === "array") {
-                obj.properties[prop].options.disable_properties = true;
-                obj.properties[prop].options.disable_edit_json = true;
-                obj.properties[prop].items._format = "wb-object";
-                if (obj.properties[prop].items.properties) {
-                    _decorateObject(obj.properties[prop].items.properties);
+        if (our.type) {
+            if (our.type === "object") {
+                if(!our.options){
+                    our.options = {};
                 }
-                obj.properties[prop].options.collapsed = true;
+                our.options.disable_properties = false;
+                our.options.disable_edit_json = true;
+                our._format = "grid";
+                our.options.collapsed = true;
+                _decorateObject(our);
+            } else if (our.type === "array") {
+                if(!our.options){
+                    our.options = {};
+                }
+                our.options.disable_properties = true;
+                our.options.disable_edit_json = true;
+                our.items._format = "wb-object";
+                if (our.items.properties) {
+                    _decorateObject(our.items.properties);
+                }
+                our.options.collapsed = true;
             }
         }
 

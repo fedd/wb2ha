@@ -1283,25 +1283,52 @@ var SCHEMA = {
                                     }
                                 },
                                 "code_arm_required": {
-                                    "description": "If true the code is required to arm the alarm. If false the code is not validated.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "If true the code is required to arm the alarm. If false the code is not validated."
                                 },
                                 "code_disarm_required": {
-                                    "description": "If true the code is required to disarm the alarm. If false the code is not validated.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "If true the code is required to disarm the alarm. If false the code is not validated."
                                 },
                                 "code_trigger_required": {
-                                    "description": "If true the code is required to trigger the alarm. If false the code is not validated.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "If true the code is required to trigger the alarm. If false the code is not validated."
                                 },
                                 "command_template": {
                                     "description": "The template used for the command payload. Available variables: action and code.",
@@ -1388,26 +1415,37 @@ var SCHEMA = {
                                     }
                                 },
                                 "supported_features": {
-                                    "description": "A list of features that the alarm control panel supports.",
-                                    "type": "array",
-                                    "items": {
-                                        "enum": [
-                                            "arm_away",
-                                            "arm_custom_bypass",
-                                            "arm_home",
-                                            "arm_night",
-                                            "arm_vacation",
-                                            "trigger"
-                                        ],
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "enum": [
+                                                    "arm_away",
+                                                    "arm_custom_bypass",
+                                                    "arm_home",
+                                                    "arm_night",
+                                                    "arm_vacation",
+                                                    "trigger"
+                                                ],
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of features that the alarm control panel supports."
                                 },
                                 "value_template": {
                                     "description": "Defines a template to extract the value.",
@@ -1417,30 +1455,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -1471,22 +1529,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -1534,41 +1610,50 @@ var SCHEMA = {
                             "description": "The mqtt binary sensor platform uses an MQTT message received to set the binary sensor’s state to on or off.\nhttps://www.home-assistant.io/integrations/binary_sensor.mqtt",
                             "properties": {
                                 "device_class": {
-                                    "description": "The type/class of the sensor to set the icon in the frontend.",
-                                    "enum": [
-                                        "battery",
-                                        "battery_charging",
-                                        "carbon_monoxide",
-                                        "cold",
-                                        "connectivity",
-                                        "door",
-                                        "garage_door",
-                                        "gas",
-                                        "heat",
-                                        "light",
-                                        "lock",
-                                        "moisture",
-                                        "motion",
-                                        "moving",
-                                        "occupancy",
-                                        "opening",
-                                        "plug",
-                                        "power",
-                                        "presence",
-                                        "problem",
-                                        "running",
-                                        "safety",
-                                        "smoke",
-                                        "sound",
-                                        "tamper",
-                                        "update",
-                                        "vibration",
-                                        "window"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "battery",
+                                                "battery_charging",
+                                                "carbon_monoxide",
+                                                "cold",
+                                                "connectivity",
+                                                "door",
+                                                "garage_door",
+                                                "gas",
+                                                "heat",
+                                                "light",
+                                                "lock",
+                                                "moisture",
+                                                "motion",
+                                                "moving",
+                                                "occupancy",
+                                                "opening",
+                                                "plug",
+                                                "power",
+                                                "presence",
+                                                "problem",
+                                                "running",
+                                                "safety",
+                                                "smoke",
+                                                "sound",
+                                                "tamper",
+                                                "update",
+                                                "vibration",
+                                                "window"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The type/class of the sensor to set the icon in the frontend."
                                 },
                                 "encoding": {
                                     "description": "The encoding of the payloads received. Set to \"\" to disable decoding of incoming payload.",
@@ -1585,27 +1670,54 @@ var SCHEMA = {
                                     }
                                 },
                                 "expire_after": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Defines the number of seconds after the sensor’s state expires, if it’s not updated. After expiry, the sensor’s state becomes unavailable.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines the number of seconds after the sensor’s state expires, if it’s not updated. After expiry, the sensor’s state becomes unavailable."
                                 },
                                 "force_update": {
-                                    "description": "Sends update events even if the value hasn’t changed. Useful if you want to have meaningful value graphs in history.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Sends update events even if the value hasn’t changed. Useful if you want to have meaningful value graphs in history."
                                 },
                                 "off_delay": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "For sensors that only send on state updates (like PIRs), this variable sets a delay in seconds after which the sensor’s state will be updated back to off.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "For sensors that only send on state updates (like PIRs), this variable sets a delay in seconds after which the sensor’s state will be updated back to off."
                                 },
                                 "payload_off": {
                                     "description": "The string that represents the off state. It will be compared to the message in the state_topic.",
@@ -1644,30 +1756,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -1698,22 +1830,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -1789,30 +1939,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -1843,22 +2013,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -1913,30 +2101,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -1967,22 +2175,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -2114,39 +2340,77 @@ var SCHEMA = {
                                     }
                                 },
                                 "fan_modes": {
-                                    "description": "A list of supported fan modes.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of supported fan modes."
                                 },
                                 "initial": {
-                                    "type": "integer",
-                                    "description": "Set the initial target temperature.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Set the initial target temperature."
                                 },
                                 "max_temp": {
-                                    "description": "Maximum set point available.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Maximum set point available."
                                 },
                                 "min_temp": {
-                                    "description": "Minimum set point available.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Minimum set point available."
                                 },
                                 "mode_command_template": {
                                     "description": "A template to render the value sent to the mode_command_topic with.",
@@ -2177,26 +2441,37 @@ var SCHEMA = {
                                     }
                                 },
                                 "modes": {
-                                    "description": "A list of supported modes. Needs to be a subset of the default values.",
-                                    "type": "array",
-                                    "items": {
-                                        "enum": [
-                                            "auto",
-                                            "cool",
-                                            "dry",
-                                            "fan_only",
-                                            "heat",
-                                            "off"
-                                        ],
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "enum": [
+                                                    "auto",
+                                                    "cool",
+                                                    "dry",
+                                                    "fan_only",
+                                                    "heat",
+                                                    "off"
+                                                ],
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of supported modes. Needs to be a subset of the default values."
                                 },
                                 "payload_off": {
                                     "description": "The payload that represents disabled state.",
@@ -2220,16 +2495,25 @@ var SCHEMA = {
                                     }
                                 },
                                 "precision": {
-                                    "description": "The desired precision for this device. Can be used to match your actual thermostat’s precision. Supported values are 0.1, 0.5 and 1.0.",
-                                    "enum": [
-                                        0.1,
-                                        0.5,
-                                        1
-                                    ],
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                0.1,
+                                                0.5,
+                                                1
+                                            ],
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The desired precision for this device. Can be used to match your actual thermostat’s precision. Supported values are 0.1, 0.5 and 1.0."
                                 },
                                 "preset_mode_command_template": {
                                     "description": "Defines a template to generate the payload to send to preset_mode_command_topic.",
@@ -2260,18 +2544,29 @@ var SCHEMA = {
                                     }
                                 },
                                 "preset_modes": {
-                                    "description": "List of preset modes this climate is supporting. Common examples include eco, away, boost, comfort, home, sleep and activity.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of preset modes this climate is supporting. Common examples include eco, away, boost, comfort, home, sleep and activity."
                                 },
                                 "swing_mode_command_template": {
                                     "description": "A template to render the value sent to the swing_mode_command_topic with.",
@@ -2302,18 +2597,29 @@ var SCHEMA = {
                                     }
                                 },
                                 "swing_modes": {
-                                    "description": "A list of supported swing modes.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of supported swing modes."
                                 },
                                 "temperature_command_template": {
                                     "description": "A template to render the value sent to the temperature_command_topic with.",
@@ -2400,22 +2706,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "temperature_unit": {
-                                    "description": "Defines the temperature unit of the device, C or F. If this is not set, the temperature unit is set to the system temperature unit.",
-                                    "enum": [
-                                        "C",
-                                        "F"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "C",
+                                                "F"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines the temperature unit of the device, C or F. If this is not set, the temperature unit is set to the system temperature unit."
                                 },
                                 "temp_step": {
-                                    "description": "Step size for temperature set point.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Step size for temperature set point."
                                 },
                                 "value_template": {
                                     "description": "Default template to render the payloads on all *_state_topics with.",
@@ -2425,30 +2749,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -2479,22 +2823,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -2549,30 +2911,48 @@ var SCHEMA = {
                                     }
                                 },
                                 "device_class": {
-                                    "description": "Sets the class of the device, changing the device state and icon that is displayed on the frontend.",
-                                    "enum": [
-                                        "awning",
-                                        "blind",
-                                        "curtain",
-                                        "damper",
-                                        "door",
-                                        "garage",
-                                        "gate",
-                                        "shade",
-                                        "shutter",
-                                        "window"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "awning",
+                                                "blind",
+                                                "curtain",
+                                                "damper",
+                                                "door",
+                                                "garage",
+                                                "gate",
+                                                "shade",
+                                                "shutter",
+                                                "window"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Sets the class of the device, changing the device state and icon that is displayed on the frontend."
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if switch works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if switch works in optimistic mode."
                                 },
                                 "payload_close": {
                                     "description": "The command payload that closes the cover.",
@@ -2596,18 +2976,36 @@ var SCHEMA = {
                                     }
                                 },
                                 "position_closed": {
-                                    "type": "integer",
-                                    "description": "Number which represents closed position.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Number which represents closed position."
                                 },
                                 "position_open": {
-                                    "type": "integer",
-                                    "description": "Number which represents open position.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Number which represents open position."
                                 },
                                 "position_template": {
                                     "description": "Defines a template that can be used to extract the payload for the `position_topic` topic.",
@@ -2680,11 +3078,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "tilt_closed_value": {
-                                    "type": "integer",
-                                    "description": "The value that will be sent on a close_cover_tilt command.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The value that will be sent on a close_cover_tilt command."
                                 },
                                 "tilt_command_template": {
                                     "description": "Defines a template that can be used to extract the payload for the `tilt_command_topic` topic.",
@@ -2701,32 +3108,68 @@ var SCHEMA = {
                                     }
                                 },
                                 "tilt_max": {
-                                    "type": "integer",
-                                    "description": "The maximum tilt value.\n https://www.home-assistant.io/integrations/cover.mqtt/#tilt_max",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The maximum tilt value.\n https://www.home-assistant.io/integrations/cover.mqtt/#tilt_max"
                                 },
                                 "tilt_min": {
-                                    "type": "integer",
-                                    "description": "The minimum tilt value.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The minimum tilt value."
                                 },
                                 "tilt_opened_value": {
-                                    "type": "integer",
-                                    "description": "The value that will be sent on an open_cover_tilt command.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The value that will be sent on an open_cover_tilt command."
                                 },
                                 "tilt_optimistic": {
-                                    "description": "Flag that determines if tilt works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that determines if tilt works in optimistic mode."
                                 },
                                 "tilt_status_template": {
                                     "description": "Defines a template that can be used to extract the payload for the tilt_status_topic topic.",
@@ -2750,30 +3193,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -2804,22 +3267,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -2902,17 +3383,26 @@ var SCHEMA = {
                                     }
                                 },
                                 "source_type": {
-                                    "description": "Attribute of a device tracker that affects state when being used to track a person. Valid options are gps, router, bluetooth, or bluetooth_le.",
-                                    "enum": [
-                                        "bluetooth",
-                                        "bluetooth_le",
-                                        "gps",
-                                        "router"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "bluetooth",
+                                                "bluetooth_le",
+                                                "gps",
+                                                "router"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Attribute of a device tracker that affects state when being used to track a person. Valid options are gps, router, bluetooth, or bluetooth_le."
                                 },
                                 "platform": {
                                     "description": "Must be `device_tracker`. Only allowed and required in MQTT auto discovery device messages.",
@@ -2922,44 +3412,75 @@ var SCHEMA = {
                                     }
                                 },
                                 "devices": {
-                                    "description": "List of devices with their topic (legacy YAML configuration).",
-                                    "type": "object",
-                                    "additionalProperties": {
-                                        "type": "string"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    },
-                                    "_format": "grid"
-                                },
-                                "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            },
+                                            "options": {
+                                                "disable_properties": false,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            },
+                                            "_format": "grid"
+                                        },
+                                        {
+                                            "title": "object {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of devices with their topic (legacy YAML configuration)."
+                                },
+                                "availability": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -2990,22 +3511,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -3067,11 +3606,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if fan works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if fan works in optimistic mode."
                                 },
                                 "direction_command_template": {
                                     "description": "Defines a template to generate the payload to send to `direction_command_template`.",
@@ -3228,34 +3776,63 @@ var SCHEMA = {
                                     }
                                 },
                                 "preset_modes": {
-                                    "description": "List of preset modes this fan is capable of running at.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of preset modes this fan is capable of running at."
                                 },
                                 "speed_range_min": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "The minimum of numeric output range (off not included, so speed_range_min - 1 represents 0%).",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The minimum of numeric output range (off not included, so speed_range_min - 1 represents 0%)."
                                 },
                                 "speed_range_max": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "The maximum of numeric output range (representing 100%).",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The maximum of numeric output range (representing 100%)."
                                 },
                                 "state_topic": {
                                     "description": "The MQTT topic subscribed to receive state updates.",
@@ -3272,30 +3849,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -3326,22 +3923,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -3431,22 +4046,31 @@ var SCHEMA = {
                                     }
                                 },
                                 "device_class": {
-                                    "description": "The device class of the MQTT device.\nMust be either `humidifier`, `dehumidifier` or `null`.",
-                                    "anyOf": [
-                                        {
-                                            "enum": [
-                                                "dehumidifier",
-                                                "humidifier"
-                                            ],
-                                            "type": "string"
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "anyOf": [
+                                                {
+                                                    "enum": [
+                                                        "dehumidifier",
+                                                        "humidifier"
+                                                    ],
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "title": "undefined {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The device class of the MQTT device.\nMust be either `humidifier`, `dehumidifier` or `null`."
                                 },
                                 "encoding": {
                                     "description": "The encoding of the payloads received and published messages.\nSet to `\"\"` to disable decoding of incoming payload.",
@@ -3463,18 +4087,36 @@ var SCHEMA = {
                                     }
                                 },
                                 "max_humidity": {
-                                    "description": "The maximum target humidity percentage that can be set.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The maximum target humidity percentage that can be set."
                                 },
                                 "min_humidity": {
-                                    "description": "The minimum target humidity percentage that can be set.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The minimum target humidity percentage that can be set."
                                 },
                                 "mode_command_template": {
                                     "description": "Defines a template to generate the payload to send to `mode_command_topic`.",
@@ -3505,25 +4147,45 @@ var SCHEMA = {
                                     }
                                 },
                                 "modes": {
-                                    "description": "List of available modes this humidifier is capable of running at.\nCommon examples include `normal`, `eco`, `away`, `boost`, `comfort`, `home`, `sleep`, `auto` and `baby`.\nThis attribute must be configured together with the `mode_command_topic` attribute.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "optimistic": {
-                                    "description": "Flag that defines if humidifier works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of available modes this humidifier is capable of running at.\nCommon examples include `normal`, `eco`, `away`, `boost`, `comfort`, `home`, `sleep`, `auto` and `baby`.\nThis attribute must be configured together with the `mode_command_topic` attribute."
+                                },
+                                "optimistic": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if humidifier works in optimistic mode."
                                 },
                                 "payload_off": {
                                     "description": "The payload that represents the stop state.",
@@ -3596,30 +4258,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -3650,22 +4332,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -3748,30 +4448,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -3802,22 +4522,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -3882,11 +4620,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "brightness_scale": {
-                                    "type": "integer",
-                                    "description": "Defines the maximum brightness value (i.e., 100%) of the MQTT device.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines the maximum brightness value (i.e., 100%) of the MQTT device."
                                 },
                                 "brightness_state_topic": {
                                     "description": "The MQTT topic subscribed to receive brightness state updates.",
@@ -3959,21 +4706,30 @@ var SCHEMA = {
                                     }
                                 },
                                 "effect_list": {
-                                    "description": "The list of effects the light supports.",
-                                    "anyOf": [
-                                        {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "anyOf": [
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "title": "undefined {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The list of effects the light supports."
                                 },
                                 "effect_state_topic": {
                                     "description": "The MQTT topic subscribed to receive effect state updates.",
@@ -4011,18 +4767,36 @@ var SCHEMA = {
                                     }
                                 },
                                 "max_mireds": {
-                                    "type": "integer",
-                                    "description": "The maximum color temperature in mireds.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The maximum color temperature in mireds."
                                 },
                                 "min_mireds": {
-                                    "type": "integer",
-                                    "description": "The minimum color temperature in mireds.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The minimum color temperature in mireds."
                                 },
                                 "on_command_type": {
                                     "description": "Defines when on the payload_on is sent. Using last (the default) will send any style (brightness, color, etc) topics first and then a payload_on to the command_topic.",
@@ -4032,11 +4806,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if light works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if light works in optimistic mode."
                                 },
                                 "payload_off": {
                                     "description": "The payload that represents disabled state.",
@@ -4102,11 +4885,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "white_scale": {
-                                    "type": "integer",
-                                    "description": "Defines the maximum white level (i.e., 100%) of the MQTT device.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines the maximum white level (i.e., 100%) of the MQTT device."
                                 },
                                 "xy_command_topic": {
                                     "description": "The MQTT topic to publish commands to change the light’s XY state.",
@@ -4130,30 +4922,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -4184,22 +4996,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -4262,32 +5092,68 @@ var SCHEMA = {
                                     ]
                                 },
                                 "brightness": {
-                                    "description": "Flag that defines if the light supports brightness.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports brightness."
                                 },
                                 "brightness_scale": {
-                                    "type": "integer",
-                                    "description": "Defines the maximum brightness value (i.e., 100%) of the MQTT device.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines the maximum brightness value (i.e., 100%) of the MQTT device."
                                 },
                                 "color_mode": {
-                                    "description": "Flag that defines if the light supports color modes.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports color modes."
                                 },
                                 "color_temp": {
-                                    "description": "Flag that defines if the light supports color temperature.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports color temperature."
                                 },
                                 "command_topic": {
                                     "description": "The MQTT topic to publish commands to change the switch state.",
@@ -4297,77 +5163,158 @@ var SCHEMA = {
                                     }
                                 },
                                 "effect": {
-                                    "description": "Flag that defines if the light supports effects.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
-                                },
-                                "effect_list": {
-                                    "description": "The list of effects the light supports.",
-                                    "anyOf": [
+                                    },
+                                    "oneOf": [
                                         {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
+                                            "type": "boolean"
                                         },
                                         {
-                                            "type": "string"
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
                                         }
                                     ],
+                                    "description": "Flag that defines if the light supports effects."
+                                },
+                                "effect_list": {
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "anyOf": [
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "title": "undefined {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The list of effects the light supports."
                                 },
                                 "flash_time_long": {
-                                    "type": "integer",
-                                    "description": "The duration, in seconds, of a “long” flash.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The duration, in seconds, of a “long” flash."
                                 },
                                 "flash_time_short": {
-                                    "type": "integer",
-                                    "description": "The duration, in seconds, of a “short” flash.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The duration, in seconds, of a “short” flash."
                                 },
                                 "hs": {
-                                    "description": "Flag that defines if the light supports HS colors.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports HS colors."
                                 },
                                 "max_mireds": {
-                                    "type": "integer",
-                                    "description": "The maximum color temperature in mireds.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The maximum color temperature in mireds."
                                 },
                                 "min_mireds": {
-                                    "type": "integer",
-                                    "description": "The minimum color temperature in mireds.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The minimum color temperature in mireds."
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if light works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if light works in optimistic mode."
                                 },
                                 "rgb": {
-                                    "description": "Flag that defines if the light supports RGB colors.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports RGB colors."
                                 },
                                 "state_topic": {
                                     "description": "The MQTT topic subscribed to receive state updates.",
@@ -4377,58 +5324,107 @@ var SCHEMA = {
                                     }
                                 },
                                 "supported_color_modes": {
-                                    "description": "A list of color modes supported by the light.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/ColorMode",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/ColorMode",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of color modes supported by the light."
                                 },
                                 "white_value": {
-                                    "description": "Flag that defines if the light supports white values.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports white values."
                                 },
                                 "xy": {
-                                    "description": "Flag that defines if the light supports XY colors.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the light supports XY colors."
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -4459,22 +5455,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -4579,21 +5593,30 @@ var SCHEMA = {
                                     }
                                 },
                                 "effect_list": {
-                                    "description": "The list of effects the light supports.",
-                                    "anyOf": [
-                                        {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "anyOf": [
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "title": "undefined {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The list of effects the light supports."
                                 },
                                 "effect_template": {
                                     "description": "Template to extract effect from the state payload value.",
@@ -4610,25 +5633,52 @@ var SCHEMA = {
                                     }
                                 },
                                 "max_mireds": {
-                                    "type": "integer",
-                                    "description": "The maximum color temperature in mireds.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The maximum color temperature in mireds."
                                 },
                                 "min_mireds": {
-                                    "type": "integer",
-                                    "description": "The minimum color temperature in mireds.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The minimum color temperature in mireds."
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if light works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if light works in optimistic mode."
                                 },
                                 "red_template": {
                                     "description": "Template to extract red color from the state payload value.",
@@ -4652,30 +5702,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -4706,22 +5776,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -4781,11 +5869,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if lock works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if lock works in optimistic mode."
                                 },
                                 "payload_lock": {
                                     "description": "The payload that represents enabled/locked state.",
@@ -4830,30 +5927,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -4884,22 +6001,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -4947,15 +6082,24 @@ var SCHEMA = {
                             "description": "The MQTT number platform.\nhttps://www.home-assistant.io/integrations/number.mqtt/",
                             "properties": {
                                 "mode": {
-                                    "description": "Control how the number should be displayed in the UI. Can be set to box or slider to force a display mode.",
-                                    "enum": [
-                                        "box",
-                                        "slider"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "box",
+                                                "slider"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Control how the number should be displayed in the UI. Can be set to box or slider to force a display mode."
                                 },
                                 "command_topic": {
                                     "description": "The MQTT topic to publish commands to change the number state.",
@@ -4965,25 +6109,52 @@ var SCHEMA = {
                                     }
                                 },
                                 "max": {
-                                    "description": "Maximum value.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Maximum value."
                                 },
                                 "min": {
-                                    "description": "Minimum value.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Minimum value."
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if the number works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the number works in optimistic mode."
                                 },
                                 "state_topic": {
                                     "description": "The MQTT topic subscribed to receive state updates.",
@@ -4993,11 +6164,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "step": {
-                                    "description": "Step value. Smallest value `0.001`.",
-                                    "type": "number",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "title": "number {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Step value. Smallest value `0.001`."
                                 },
                                 "unit_of_measurement": {
                                     "description": "Defines the units of measurement, if any.",
@@ -5014,30 +6194,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -5068,22 +6268,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -5138,11 +6356,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if the scene works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if the scene works in optimistic mode."
                                 },
                                 "payload": {
                                     "description": "The payload that represents the scene.",
@@ -5166,30 +6393,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -5220,22 +6467,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -5290,25 +6555,45 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines the select works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines the select works in optimistic mode."
                                 },
                                 "options": {
-                                    "description": "List of options to choose from in the select.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of options to choose from in the select."
                                 },
                                 "state_topic": {
                                     "description": "The MQTT topic subscribed to receive the select value.",
@@ -5325,30 +6610,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -5379,22 +6684,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -5442,18 +6765,29 @@ var SCHEMA = {
                             "description": "The mqtt siren platform lets you control your MQTT enabled sirens and text based notification devices.\nhttps://www.home-assistant.io/integrations/siren.mqtt",
                             "properties": {
                                 "available_tones": {
-                                    "description": "The list of available tones the siren supports.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The list of available tones the siren supports."
                                 },
                                 "command_template": {
                                     "description": "Defines a template to generate a custom payload to send to command_topic.",
@@ -5477,18 +6811,36 @@ var SCHEMA = {
                                     }
                                 },
                                 "support_duration": {
-                                    "description": "Defines if the siren supports the duration option.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines if the siren supports the duration option."
                                 },
                                 "support_volume_set": {
-                                    "description": "Defines if the siren supports setting the volume.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines if the siren supports setting the volume."
                                 },
                                 "state_topic": {
                                     "description": "The MQTT topic subscribed to receive state updates.",
@@ -5533,37 +6885,66 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if siren works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if siren works in optimistic mode."
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -5594,22 +6975,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -5657,68 +7056,77 @@ var SCHEMA = {
                             "description": "This mqtt sensor platform uses the MQTT message payload as the sensor value.\nhttps://www.home-assistant.io/integrations/sensor.mqtt",
                             "properties": {
                                 "device_class": {
-                                    "description": "The type/class of the sensor to set the icon in the frontend.",
-                                    "enum": [
-                                        "apparent_power",
-                                        "aqi",
-                                        "area",
-                                        "atmospheric_pressure",
-                                        "battery",
-                                        "blood_glucose_concentration",
-                                        "carbon_dioxide",
-                                        "carbon_monoxide",
-                                        "conductivity",
-                                        "current",
-                                        "data_rate",
-                                        "data_size",
-                                        "date",
-                                        "distance",
-                                        "duration",
-                                        "energy",
-                                        "energy_distance",
-                                        "energy_storage",
-                                        "enum",
-                                        "frequency",
-                                        "gas",
-                                        "humidity",
-                                        "illuminance",
-                                        "irradiance",
-                                        "moisture",
-                                        "monetary",
-                                        "nitrogen_dioxide",
-                                        "nitrogen_monoxide",
-                                        "nitrous_oxide",
-                                        "ozone",
-                                        "ph",
-                                        "pm1",
-                                        "pm10",
-                                        "pm25",
-                                        "power",
-                                        "power_factor",
-                                        "precipitation",
-                                        "precipitation_intensity",
-                                        "pressure",
-                                        "reactive_power",
-                                        "signal_strength",
-                                        "sound_pressure",
-                                        "speed",
-                                        "sulphur_dioxide",
-                                        "temperature",
-                                        "timestamp",
-                                        "volatile_organic_compounds",
-                                        "volatile_organic_compounds_parts",
-                                        "voltage",
-                                        "volume",
-                                        "volume_flow_rate",
-                                        "volume_storage",
-                                        "water",
-                                        "weight",
-                                        "wind_speed"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "apparent_power",
+                                                "aqi",
+                                                "area",
+                                                "atmospheric_pressure",
+                                                "battery",
+                                                "blood_glucose_concentration",
+                                                "carbon_dioxide",
+                                                "carbon_monoxide",
+                                                "conductivity",
+                                                "current",
+                                                "data_rate",
+                                                "data_size",
+                                                "date",
+                                                "distance",
+                                                "duration",
+                                                "energy",
+                                                "energy_distance",
+                                                "energy_storage",
+                                                "enum",
+                                                "frequency",
+                                                "gas",
+                                                "humidity",
+                                                "illuminance",
+                                                "irradiance",
+                                                "moisture",
+                                                "monetary",
+                                                "nitrogen_dioxide",
+                                                "nitrogen_monoxide",
+                                                "nitrous_oxide",
+                                                "ozone",
+                                                "ph",
+                                                "pm1",
+                                                "pm10",
+                                                "pm25",
+                                                "power",
+                                                "power_factor",
+                                                "precipitation",
+                                                "precipitation_intensity",
+                                                "pressure",
+                                                "reactive_power",
+                                                "signal_strength",
+                                                "sound_pressure",
+                                                "speed",
+                                                "sulphur_dioxide",
+                                                "temperature",
+                                                "timestamp",
+                                                "volatile_organic_compounds",
+                                                "volatile_organic_compounds_parts",
+                                                "voltage",
+                                                "volume",
+                                                "volume_flow_rate",
+                                                "volume_storage",
+                                                "water",
+                                                "weight",
+                                                "wind_speed"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The type/class of the sensor to set the icon in the frontend."
                                 },
                                 "encoding": {
                                     "description": "The encoding of the payloads received. Set to \"\" to disable decoding of incoming payload.",
@@ -5735,19 +7143,37 @@ var SCHEMA = {
                                     }
                                 },
                                 "expire_after": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Defines the number of seconds after the sensor’s state expires, if it’s not updated. After expiry, the sensor’s state becomes unavailable.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Defines the number of seconds after the sensor’s state expires, if it’s not updated. After expiry, the sensor’s state becomes unavailable."
                                 },
                                 "force_update": {
-                                    "description": "Sends update events even if the value hasn’t changed. Useful if you want to have meaningful value graphs in history.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Sends update events even if the value hasn’t changed. Useful if you want to have meaningful value graphs in history."
                                 },
                                 "last_reset_topic": {
                                     "description": "The MQTT topic subscribed to receive timestamps for when an accumulating sensor such as an energy meter was reset. If the sensor never resets, set last_reset_topic to same as state_topic and set the last_reset_value_template to a constant valid timstamp, for example UNIX epoch 0: 1970-01-01T00:00:00+00:00.",
@@ -5764,18 +7190,29 @@ var SCHEMA = {
                                     }
                                 },
                                 "options": {
-                                    "description": "List of allowed sensor state value. An empty list is not allowed. The sensor's device_class must be set to enum.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of allowed sensor state value. An empty list is not allowed. The sensor's device_class must be set to enum."
                                 },
                                 "platform": {
                                     "description": "Must be sensor. Only allowed and required in MQTT auto discovery device messages.",
@@ -5786,16 +7223,25 @@ var SCHEMA = {
                                     }
                                 },
                                 "state_class": {
-                                    "description": "The state_class of the sensor.",
-                                    "enum": [
-                                        "measurement",
-                                        "total",
-                                        "total_increasing"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "measurement",
+                                                "total",
+                                                "total_increasing"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The state_class of the sensor."
                                 },
                                 "state_topic": {
                                     "description": "The MQTT topic subscribed to receive sensor values.",
@@ -5805,11 +7251,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "suggested_display_precision": {
-                                    "type": "integer",
-                                    "description": "The number of decimals which should be used in the sensor's state after rounding.",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "title": "integer {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The number of decimals which should be used in the sensor's state after rounding."
                                 },
                                 "unit_of_measurement": {
                                     "description": "Defines the units of measurement of the sensor, if any.",
@@ -5826,30 +7281,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -5880,22 +7355,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -5964,11 +7457,20 @@ var SCHEMA = {
                                     }
                                 },
                                 "optimistic": {
-                                    "description": "Flag that defines if switch works in optimistic mode.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag that defines if switch works in optimistic mode."
                                 },
                                 "payload_off": {
                                     "description": "The payload that represents the off state.",
@@ -6013,30 +7515,50 @@ var SCHEMA = {
                                     }
                                 },
                                 "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -6067,22 +7589,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
@@ -6147,18 +7687,29 @@ var SCHEMA = {
                                     }
                                 },
                                 "fan_speed_list": {
-                                    "description": "List of possible fan speeds for the vacuum.",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
                                     "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of possible fan speeds for the vacuum."
                                 },
                                 "fan_speed_template": {
                                     "description": "Defines a template to define the fan speed of the vacuum.",
@@ -6238,44 +7789,75 @@ var SCHEMA = {
                                     }
                                 },
                                 "supported_features": {
-                                    "description": "List of features that the vacuum supports (possible values are start, stop, pause, return_home, battery, status, locate, clean_spot, fan_speed, send_command).",
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability": {
-                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates.",
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Availability",
-                                        "_format": "wb-object"
-                                    },
-                                    "options": {
-                                        "show_opt_in": true,
-                                        "disable_properties": true,
-                                        "disable_edit_json": true,
-                                        "collapsed": true
-                                    }
-                                },
-                                "availability_mode": {
-                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest.",
-                                    "enum": [
-                                        "all",
-                                        "any",
-                                        "latest"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "List of features that the vacuum supports (possible values are start, stop, pause, return_home, battery, status, locate, clean_spot, fan_speed, send_command)."
+                                },
+                                "availability": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Availability",
+                                                "_format": "wb-object"
+                                            },
+                                            "options": {
+                                                "disable_properties": true,
+                                                "disable_edit_json": true,
+                                                "collapsed": true
+                                            }
+                                        },
+                                        {
+                                            "title": "array {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "A list of MQTT topics subscribed to receive availability (online/offline) updates."
+                                },
+                                "availability_mode": {
+                                    "options": {
+                                        "show_opt_in": true
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "all",
+                                                "any",
+                                                "latest"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "When availability is configured, this controls the conditions needed to set the entity to available. Valid entries are all, any, and latest."
                                 },
                                 "availability_template": {
                                     "description": "Defines a template to extract device’s availability from the availability_topic. To determine the devices’s availability result of this template will be compared to payload_available and payload_not_available.",
@@ -6306,22 +7888,40 @@ var SCHEMA = {
                                     }
                                 },
                                 "enabled_by_default": {
-                                    "description": "Flag which defines if the entity should be enabled when first added.",
-                                    "type": "boolean",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "title": "boolean {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "Flag which defines if the entity should be enabled when first added."
                                 },
                                 "entity_category": {
-                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors.",
-                                    "enum": [
-                                        "config",
-                                        "diagnostic"
-                                    ],
-                                    "type": "string",
                                     "options": {
                                         "show_opt_in": true
-                                    }
+                                    },
+                                    "oneOf": [
+                                        {
+                                            "enum": [
+                                                "config",
+                                                "diagnostic"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        {
+                                            "title": "string {var}",
+                                            "type": "string",
+                                            "pattern": "^\\{\\S+\\}$"
+                                        }
+                                    ],
+                                    "description": "The category of the entity. When set, the entity category must be \"diagnostic\" for sensors."
                                 },
                                 "icon": {
                                     "description": "Icon to use for the entity created.",
