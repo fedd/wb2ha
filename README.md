@@ -5,7 +5,7 @@ For English, translate with your browser.
 
 ## Перенос устройств WirenBoard в Home Assistant
 
-Скрипт позволяет отображать устройства [WirenBoard](https://wirenboard.com/ru/) из [Home Assistant](https://www.home-assistant.io/) 
+Скрипт позволяет отображать устройства [WirenBoard](https://wirenboard.com/ru/) в [Home Assistant](https://www.home-assistant.io/) 
 и управлять ими с помощью преобразования и публикации данных из 
 топиков `meta`, которые создаются в WirenBoard для каждого устройства и контрола, в топики Home Assistant MQTT Discovery.
 
@@ -106,13 +106,15 @@ Assistant образуется сущность, следящая также и 
 
 <img width="900" height="1434" alt="image" src="https://github.com/user-attachments/assets/94417eba-df2c-447f-8664-e13b422a1323" />
 
-
 В wb2ha есть редактор настроек для каждой платформы, и, в принципе, все поля снабжены подсказками из англоязычной документации 
 (хотя могут встречаться ошибки, так как это все, естественно, сформировано автоматически из неких источников в интернете. Например, 
 кто-то когда-то разобрал настройки редактора VSCode для редактирования хоумассистантовского yaml и превратил это в 
-[json-схему](https://git.sr.ht/~johnhamelink/hass-json-schema/)).
+[json-схему](https://git.sr.ht/~johnhamelink/hass-json-schema/)). К сожалению, без уродливой кнопки Properties мне не удаётся 
+отображать редактор опций в более компактном виде из-за особенностей встроенного редактора конфигураций. 
 
-Кроме того, кое-что уже настроено мной и сохранено в виде так называемых "Именованнных модификаторов"
+Если мы указываем тип `Any`, то можем в достаточно компактном виде добавлять произвольные опции в сообщение HA MQTT Discovery.
+
+Однако, кое-что уже настроено мной и сохранено в виде так называемых "Именованнных модификаторов"
 
 #### Именованные модификаторы и переменные
 
@@ -161,6 +163,91 @@ WirenBoard представляет устройства Zigbee из своег�
 вентилятор
 
 <img width="1242" height="1384" alt="image" src="https://github.com/user-attachments/assets/352df9ff-cf8b-48d3-a35e-728764242e4d" />
+
+##### Термостаты и роллеты
+
+Я написал свой собственный термостат с помощью правил WirenBoard, который выглядит примерно так:
+
+<img width="780" height="434" alt="image" src="https://github.com/user-attachments/assets/3bd69422-65bc-4bf2-bc13-e89c36b79329" />
+
+Я написал его самостоятельно, поскольку хотел в общем иметь представление о 
+[ПИД-регуляторах](https://ru.wikipedia.org/wiki/%D0%9F%D0%98%D0%94-%D1%80%D0%B5%D0%B3%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80) - и я совершенно 
+не уверен, что мне удалось, и что на деле он способен подстроить температуру помещения без "перелётов" и "недолётов", поэтому, в отличие
+от WB Engine, он не входит в состав wb2ha. К тому же он реализует требования, которых я ни у кого, кроме себя, не видел, а именно,
+все термостаты дома знают о существовании котла; динамически выбирается термостат с самой большой ошибкой, то есть самая холодная комната, 
+у батареи которого клапан открывается полностью, а температура в этом помещении начинает управляться котлом напрямую. 
+Для котла же в доме как будто только одна комната и он подбирает свой режим работы своим внутренним механизмом. Скрипт сложен, заточен
+под мои устройства и делать его настраиваемым для разных инсталляций пока неохота.
+
+Для отображения этого термостата в HA я создал именованный модификатор, который удобнее представить в виде куска конфигурационного 
+файла, чем скриншота редактора конфигураций:
+
+```
+        "namedModifiers": [
+...
+            {
+                "code": "thermostat",
+                "value": {
+                    "mod": {
+                        "climate": {
+                            "action_template": "{{ 'heating' if value == '1' else 'idle' }}",
+                            "action_topic": "/devices/{device.id}/controls/state",
+                            "current_temperature_topic": "/devices/{device.id}/controls/temperature",
+                            "max_temp": "{control.meta.max}",
+                            "min_temp": "{control.meta.min}",
+                            "mode_state_template": "{{ 'off' if value == 'off' else 'heat' }}",
+                            "mode_state_topic": "/devices/{device.id}/controls/mode",
+                            "modes": [
+                                "heat",
+                                "off"
+                            ],
+                            "preset_mode_command_topic": "/devices/{device.id}/controls/mode/on",
+                            "preset_mode_state_topic": "/devices/{device.id}/controls/mode",
+                            "preset_modes": [
+                                "off",
+                                "low",
+                                "on",
+                                "hi"
+                            ],
+                            "temperature_command_topic": "/devices/{device.id}/controls/{control.id}/on",
+                            "temperature_state_topic": "/devices/{device.id}/controls/{control.id}",
+                            "temperature_unit": "C"
+                        }
+                    },
+                    "namedModifiers": []
+                }
+            },
+...
+```
+С рольставнями такая же ситуация: встроенный шаблон управления шторами в мини на тот момент не существовал, а затем не
+запоминал положение штор, поэтому я написал свое несложное виртуальное устройство:
+
+<img width="774" height="446" alt="image" src="https://github.com/user-attachments/assets/d8d58cc4-2b82-471d-a24a-288497809f4b" />
+
+Для него сделал такой именованный модификатор:
+
+```
+            {
+                "code": "rollshutter",
+                "value": {
+                    "mod": {
+                        "cover": {
+                            "device_class": "shutter",
+                            "payload_close": "{control.meta.min}",
+                            "payload_open": "{control.meta.max}",
+                            "payload_stop": "null",
+                            "position_closed": "{control.meta.min}",
+                            "position_open": "{control.meta.max}",
+                            "position_topic": "/devices/{device.id}/controls/targetPosition",
+                            "set_position_topic": "/devices/{device.id}/controls/targetPosition/on",
+                            "state_stopped": "stopped",
+                            "state_topic": "/devices/{device.id}/controls/state"
+                        }
+                    },
+                    "namedModifiers": []
+                }
+            }
+```
 
 ### Почему мне не подошёл WB Engine
 
